@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModeloCita {
+public class CitaModelo {
 
 	private long codigo;
 	private LocalDateTime fecha;

@@ -9,20 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ModeloServicio {
+public class ServicioModelo {
 
 	private long id;
 	private String nombre, img;
 	private double precio;
 	private Duration duracion;
-	private ModeloCita mCita;
-	private ModeloCliente mCliente;
-
-	public ModeloServicio(ModeloCita mCita, ModeloCliente mCliente) {
-
-		this.mCita = mCita;
-		this.mCliente = mCliente;
-
-	}
+	private CitaModelo mCita;
+	private ClienteModelo mCliente;
 
 }
