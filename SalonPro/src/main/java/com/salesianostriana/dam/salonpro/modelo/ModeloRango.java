@@ -1,4 +1,4 @@
-package modelo;
+package com.salesianostriana.dam.salonpro.modelo;
 
 public interface ModeloRango {
 
