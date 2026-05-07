@@ -1,0 +1,41 @@
+package com.salesianostriana.dam.salonpro.modelo;
+
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+public class Cita {
+
+	@Id
+	@GeneratedValue
+	private long codigo;
+
+	private LocalDateTime fecha;
+	private double precioTotal;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_cliente", foreignKey = @ForeignKey(name = "fk_cita_cliente"))
+	private Cliente cliente;
+
+	/*
+	 * // Preguntar a Luismi ??
+	 * 
+	 * @OneToMany private Servicio servicio;
+	 */
+}
