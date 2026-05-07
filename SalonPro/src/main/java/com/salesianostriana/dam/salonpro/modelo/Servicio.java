@@ -1,18 +1,19 @@
 package com.salesianostriana.dam.salonpro.modelo;
 
 import java.time.Duration;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class Servicio {
 
@@ -24,10 +25,12 @@ public class Servicio {
 	private double precio;
 	private Duration duracion;
 
-	// Preguntar a Luismi ??
-	@OneToMany
-	private Cita cita;
-
-	// Puede que haya que crear una clase más para relacionarlas (?)
+	/*
+	 * // Preguntar a Luismi ??
+	 * 
+	 * @OneToMany private Cita cita;
+	 * 
+	 * // Puede que haya que crear una clase más para relacionarlas (?)
+	 */
 
 }
