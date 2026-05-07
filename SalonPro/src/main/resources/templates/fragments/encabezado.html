@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body>
+
+	<head>
+		<nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-black">
+			<div class="container-fluid">
+
+				<a class="navbar-brand d-flex align-items-center text-warning" href="#">
+					<i class="bi bi-scissors me-2 fs-2"></i>
+					<span class="fs-4 fw-bold">Salón Pro</span>
+				</a>
+
+				<button class="navbar-toggler border-warning" type="button" data-bs-toggle="collapse"
+					data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav mx-auto">
+						<li class="nav-item">
+							<a class="nav-link text-warning px-4" href="#">Inicio</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-warning px-4" href="#">Servicios</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-warning px-4" href="#">Galería</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-warning px-4" href="#">Quiénes Somos</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-warning px-4" href="#">Iniciar Sesión</a>
+						</li>
+					</ul>
+
+					<div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+						<a href="#" class="text-decoration-none d-flex align-items-center gap-2 text-warning">
+							<i class="bi bi-telephone-fill"></i>
+							<span>954 33 14 88</span>
+						</a>
+
+						<button class="btn btn-warning rounded-pill d-flex align-items-center gap-2 fw-bold text-black">
+							<i class="bi bi-calendar-event"></i>
+							Reservar Cita
+						</button>
+
+					</div>
+				</div>
+			</div>
+		</nav>
+	</head>
+
+	<!-- ------------------- Preguntar ?? ------------------- -->
+
+	<footer class="py-5 bg-black text-warning">
+		<div class="container">
+			<div class="row g-4">
+
+				<div class="col-lg-3 col-md-6">
+					<div class="d-flex align-items-center mb-3">
+						<i class="bi bi-scissors me-2 fs-4"></i>
+						<h5 class="mb-0 fw-bold">Salón Pro</h5>
+					</div>
+					<p class="small opacity-75">
+						Tu salón de belleza de confianza. Ofrecemos servicios profesionales de peluquería, estilismo y
+						cuidado
+						personal con los mejores productos del mercado.
+					</p>
+				</div>
+
+				<div class="col-lg-3 col-md-6">
+					<h5 class="mb-3 fw-bold small">CONTACTO</h5>
+					<ul class="list-unstyled">
+						<li class="mb-2 d-flex align-items-start">
+							<i class="bi bi-geo-alt me-2 mt-1"></i>
+							<span class="small opacity-75">C. Condes de Bustillo, 17, 41010 Sevilla, España</span>
+						</li>
+						<li class="mb-2 d-flex align-items-start">
+							<i class="bi bi-telephone me-2 mt-1"></i>
+							<span class="small opacity-75">954 33 14 88</span>
+						</li>
+						<li class="mb-2 d-flex align-items-start">
+							<i class="bi bi-envelope me-2 mt-1"></i>
+							<span class="small opacity-75">info@salonpro.com</span>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-lg-3 col-md-6">
+					<h5 class="mb-3 fw-bold small">HORARIO</h5>
+					<ul class="list-unstyled small">
+						<li class="d-flex justify-content-between mb-2 opacity-75">
+							<span>Lunes - Viernes:</span>
+							<span class="opacity-100 fw-bold">9:00 - 20:00</span>
+						</li>
+						<li class="d-flex justify-content-between mb-2 opacity-75">
+							<span>Sábado:</span>
+							<span class="opacity-100 fw-bold">10:00 - 18:00</span>
+						</li>
+						<li class="d-flex justify-content-between mb-2 opacity-75">
+							<span>Domingo:</span>
+							<span class="opacity-100 fw-bold">Cerrado</span>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-lg-3 col-md-6">
+					<h5 class="mb-3 fw-bold small">SÍGUENOS</h5>
+					<div class="d-flex gap-2 mb-3">
+						<a href="#"
+							class="btn btn-warning btn-sm rounded-circle d-flex align-items-center justify-content-center"
+							style="width: 35px; height: 35px;">
+							<i class="bi bi-facebook text-black"></i>
+						</a>
+						<a href="#"
+							class="btn btn-warning btn-sm rounded-circle d-flex align-items-center justify-content-center"
+							style="width: 35px; height: 35px;">
+							<i class="bi bi-instagram text-black"></i>
+						</a>
+						<a href="#"
+							class="btn btn-warning btn-sm rounded-circle d-flex align-items-center justify-content-center"
+							style="width: 35px; height: 35px;">
+							<i class="bi bi-twitter-x text-black"></i>
+						</a>
+
+					</div>
+				</div>
+
+				<hr class="my-4 border-warning opacity-25">
+
+				<div class="text-center small opacity-75">
+					<p class="mb-0">Copyright &copy; <strong>Salón Pro</strong>. Luismi apruébame.</p>
+				</div>
+			</div>
+	</footer>
+
+</body>
+
+</html>
