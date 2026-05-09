@@ -9,16 +9,143 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </head>
 
-<body>
+<body class="bg-black">
 
-	<div th:replace="~{fragments/cabecera :: cabecera}"></div>
+	<header th:replace="~{fragments/cabecera :: cabecera}"></header>
 
+	<main>
 
-	<div th:replace="~{fragments/pie :: pie}"></div>
+		<!-- Descripción -->
+		<section class="container my-5">
+			<div class="row align-items-center">
 
+				<div class="col-12 col-md-7 col-lg-8">
+					<h4 id="texto" class="text-warning">Quiénes Somos</h4>
+					<p class="text-white form-control-plaintext">
+						SalonPro es un ambicioso proyecto nacido en marzo de 2026 para ofrecer los mejores servicios de
+						peluquería, make up y estilismo.
+
+						El proyecto emerge de la mano de Miguel Campos, la esencia y espíritu de SalonPro. Sus más de 15
+						años como profesional en el mundo de la belleza avalan un éxito seguro en este nuevo proyecto.
+						En su carrera profesional ha trabajado en importantes salones como peluquero y maquillador, y ha
+						colaborado con diferentes medios de comunicación, televisión y diversas publicaciones.
+
+						Conocedor de las últimas tendencias y con la misma ilusión que el primer día, aboga por la
+						excelencia
+						en el trato al cliente como referente en SalonPro. Sincero, divertido y cercano. Un verdadero
+						ejemplo
+						de tenacidad y pasión por su profesión.
+
+						Tal y como soñamos, hemos creado un pequeño rinconcito de fantasía. Un sitio para crear,
+						imaginar e
+						inventar un diseño diferente y personalizado en cada manicura o maquillaje. Te ofrecemos que
+						sueñes
+						y te dejes llevar con nosotras en este lugar mágico.
+					</p>
+				</div>
+
+				<div class="col-12 col-md-5 col-lg-4 text-center">
+					<img th:src="@{/img/logo.jpg}" alt="Logo" class="img-fluid w-75">
+				</div>
+			</div>
+		</section>
+
+		<!-- Preguntar a Rafa sobre el espacio -->
+		<!-- Galería -->
+		<h4 id="galeria" class="text-warning">
+			Algunos de nuestros trabajos
+		</h4>
+
+		<section id="multiCarousel" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-inner">
+
+				<!-- Página 1 -->
+				<div class="carousel-item active">
+					<div class="row g-3">
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/1.jpg}" class="d-block w-75 mx-auto" alt="Foto 1">
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/2.jpg}" class="d-block w-75 mx-auto" alt="Foto 2">
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/3.jpg}" class="d-block w-75 mx-auto" alt="Foto 3">
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/4.jpg}" class="d-block w-75 mx-auto" alt="Foto 4">
+						</div>
+
+					</div>
+				</div>
+
+				<!-- Página 2 -->
+				<div class="carousel-item">
+					<div class="row g-3">
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/5.jpg}" class="d-block w-75 mx-auto" alt="Foto 5">
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/6.jpg}" class="d-block w-75 mx-auto" alt="Foto 6">
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/7.jpg}" class="d-block w-75 mx-auto" alt="Foto 7">
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/8.jpg}" class="d-block w-75 mx-auto" alt="Foto 8">
+						</div>
+
+					</div>
+				</div>
+
+				<!-- Página 3 -->
+				<div class="carousel-item">
+					<div class="row g-3">
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/9.jpg}" class="d-block w-75 mx-auto" alt="Foto 9">
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/10.jpg}" class="d-block w-75 mx-auto" alt="Foto 10">
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/11.jpg}" class="d-block w-75 mx-auto" alt="Foto 11">
+						</div>
+
+						<div class="col-12 col-md-6 col-lg-3">
+							<img th:src="@{/img/img-carrusel/12.jpg}" class="d-block w-75 mx-auto" alt="Foto 12">
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+			<!-- Controles -->
+			<button class="carousel-control-prev" type="button" data-bs-target="#multiCarousel" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon"></span>
+			</button>
+
+			<button class="carousel-control-next" type="button" data-bs-target="#multiCarousel" data-bs-slide="next">
+				<span class="carousel-control-next-icon"></span>
+			</button>
+
+		</section>
+
+	</main>
+
+	<footer th:replace="~{fragments/pie :: pie}"></footer>
 
 </body>
 
