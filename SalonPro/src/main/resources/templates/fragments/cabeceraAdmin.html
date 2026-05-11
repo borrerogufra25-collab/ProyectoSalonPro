@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+	<header th:fragment="cabeceraAdmin">
+
+		<nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+			<div class="container-fluid">
+
+				<a class="navbar-brand text-warning fw-bold" href="/admin/inicio">
+					<i class="bi bi-scissors me-2 fs-3"></i> SalonPro Admin
+				</a>
+
+				<button class="navbar-toggler border-warning" type="button" data-bs-toggle="collapse"
+					data-bs-target="#navbarAdmin">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navbarAdmin">
+
+					<ul class="navbar-nav me-auto">
+
+						<li class="nav-item">
+							<a class="nav-link text-warning" href="#">Servicios</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link text-warning" href="#">Clientes</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link text-warning" href="#">Citas</a>
+						</li>
+
+					</ul>
+
+					<a href="/" class="btn btn-outline-warning fw-bold">Cerrar sesión</a>
+
+				</div>
+			</div>
+		</nav>
+
+	</header>
+
+</body>
+
+</html>
