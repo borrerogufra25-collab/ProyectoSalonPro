@@ -24,3 +24,46 @@ hs_err_pid*
 replay_pid*
 
 /.metadata/
+
+# Spring Boot
+/target/
+build/
+*.jar
+*.war
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+
+# Gradle
+.gradle/
+gradle/
+
+# Maven
+.m2/
+
+# Logs
+logs/
+log4j.properties
+
+# Temporary files
+tmp/
+temp/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Application properties (si contiene credenciales)
+application-dev.properties
+application-local.properties
+
+# Database
+*.db
+*.sqlite
