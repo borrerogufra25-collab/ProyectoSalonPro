@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+	<header th:fragment="cabeceraUsuario">
+
+		<nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+			<div class="container-fluid">
+
+				<a class="navbar-brand text-warning fw-bold" href="/usuario/inicio">
+					<i class="bi bi-person-circle me-2 fs-3"></i>Área Usuario
+				</a>
+
+				<button class="navbar-toggler border-warning" type="button" data-bs-toggle="collapse"
+					data-bs-target="#navbarUsuario">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navbarUsuario">
+
+					<ul class="navbar-nav me-auto">
+
+						<li class="nav-item">
+							<a class="nav-link text-warning" href="#">Mis Citas</a>
+						</li>
+
+						<li class="nav-item">
+							<a class="nav-link text-warning" href="#">Reservar Cita</a>
+						</li>
+
+					</ul>
+
+					<a href="/" class="btn btn-outline-warning fw-bold">Cerrar sesión</a>
+
+				</div>
+			</div>
+		</nav>
+
+	</header>
+
+</body>
+
+</html>

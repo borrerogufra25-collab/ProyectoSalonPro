@@ -14,4 +14,14 @@ public class PrincipalControlador {
 		return "principal";
 	}
 
+	@GetMapping("/inicioAdmin")
+	public String inicioAdmin() {
+		return "inicioAdmin";
+	}
+
+	@GetMapping("/inicioUsuario")
+	public String inicioUsuario() {
+		return "inicioUsuario";
+	}
+
 }
