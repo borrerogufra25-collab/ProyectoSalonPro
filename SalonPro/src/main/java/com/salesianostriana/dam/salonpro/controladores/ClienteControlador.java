@@ -23,7 +23,7 @@ public class ClienteControlador {
 	@PostMapping("/addCliente")
 	public String submitCliente(@ModelAttribute("clienteForm") Cliente cliente, Model model) {
 		model.addAttribute("cliente", cliente);
-		return "nuevoCliente";
+		return "redirect:/nuevoCliente";
 	}
 
 }
