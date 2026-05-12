@@ -1,98 +1,89 @@
-<!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="cabecera" class="bg-dark">
 
-<body>
+	<nav class="navbar navbar-expand-lg navbar sticky-top">
+		<div class="container-fluid">
 
-    <header th:fragment="cabecera">
+			<a class="navbar-brand d-flex align-items-center text-warning" href="#">
+				<i class="bi bi-scissors me-2 fs-2"></i>
+				<span class="fs-4 fw-bold">SalonPro</span>
+			</a>
 
-        <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-black">
-            <div class="container-fluid">
+			<button class="navbar-toggler border-warning" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-                <a class="navbar-brand d-flex align-items-center text-warning" href="#">
-                    <i class="bi bi-scissors me-2 fs-2"></i>
-                    <span class="fs-4 fw-bold">SalonPro</span>
-                </a>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav mx-auto">
+					<li class="nav-item">
+						<a class="nav-link text-warning px-4" href="#">Inicio</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-warning px-4" href="#">Servicios</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-warning px-4" href="#texto">Quiénes Somos</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-warning px-4" href="#galeria">Galería</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-warning px-4" href="#" data-bs-toggle="modal"
+							data-bs-target="#modalIniciarSesion">
+							Iniciar Sesión
+						</a>
+					</li>
+				</ul>
 
-                <button class="navbar-toggler border-warning" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+				<div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+					<a href="#" class="text-decoration-none d-flex align-items-center gap-2 text-warning">
+						<i class="bi bi-telephone-fill"></i>
+						<span>954 33 14 88</span>
+					</a>
 
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav mx-auto">
-                        <li class="nav-item">
-                            <a class="nav-link text-warning px-4" href="#">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-warning px-4" href="#">Servicios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-warning px-4" href="#texto">Quiénes Somos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-warning px-4" href="#galeria">Galería</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-warning px-4" href="#" data-bs-toggle="modal"
-                                data-bs-target="#modalIniciarSesion">
-                                Iniciar Sesión
-                            </a>
-                        </li>
-                    </ul>
+					<button class="btn btn-warning rounded-pill d-flex align-items-center gap-2 fw-bold text-black">
+						<i class="bi bi-calendar-event"></i>
+						Reservar Cita
+					</button>
+				</div>
+			</div>
+		</div>
+	</nav>
 
-                    <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
-                        <a href="#" class="text-decoration-none d-flex align-items-center gap-2 text-warning">
-                            <i class="bi bi-telephone-fill"></i>
-                            <span>954 33 14 88</span>
-                        </a>
+	<!-- Modal de inicio de sesión -->
+	<div class="modal" id="modalIniciarSesion">
+		<div class="modal-dialog modal-dialog-centered">
 
-                        <button class="btn btn-warning rounded-pill d-flex align-items-center gap-2 fw-bold text-black">
-                            <i class="bi bi-calendar-event"></i>
-                            Reservar Cita
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </nav>
+			<div class="modal-content">
 
-        <!-- Modal de inicio de sesión -->
-        <div class="modal" id="modalIniciarSesion">
-            <div class="modal-dialog modal-dialog-centered">
+				<div class="modal-header bg-dark text-warning">
+					<h5 class="modal-title">Iniciar Sesión</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+				</div>
 
-                <div class="modal-content">
+				<div class="modal-body">
 
-                    <div class="modal-header bg-black text-warning">
-                        <h5 class="modal-title">Iniciar Sesión</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
+					<form>
+						<div class="mb-3">
+							<label class="form-label fw-bold">Usuario</label>
+							<input type="text" class="form-control" required>
+						</div>
 
-                    <div class="modal-body">
+						<div class="mb-3">
+							<label class="form-label fw-bold">Contraseña</label>
+							<input type="password" class="form-control" required>
+						</div>
 
-                        <form>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Usuario</label>
-                                <input type="text" class="form-control" required>
-                            </div>
+						<button type="submit" class="btn btn-warning w-100 fw-bold text-black">
+							Entrar
+						</button>
 
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Contraseña</label>
-                                <input type="password" class="form-control" required>
-                            </div>
+					</form>
+				</div>
 
-                            <button type="submit" class="btn btn-warning w-100 fw-bold text-black">
-                                Entrar
-                            </button>
+			</div>
+		</div>
+	</div>
 
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-    </header>
-
-</body>
-
-</html>
+</header>
