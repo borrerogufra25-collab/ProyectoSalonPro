@@ -1,0 +1,46 @@
+package com.salesianostriana.dam.salonpro.serviciosBase;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public abstract class BaseServiciosImpl<T, ID, R extends JpaRepository<T, ID>> implements BaseServicios<T, ID> {
+
+	@Autowired
+	protected R repository;
+
+	@Override
+	public List<T> findAll() {
+		return repository.findAll();
+	}
+
+	@Override
+	public Optional<T> findById(ID id) {
+		return repository.findById(id);
+	}
+
+	@Override
+	public T save(T t) {
+		return repository.save(t);
+	}
+
+	@Override
+	public T edit(T t) {
+		return repository.save(t);
+	}
+
+	@Override
+	public void delete(T t) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteByID(T t) {
+		// TODO Auto-generated method stub
+
+	}
+
+}
