@@ -22,13 +22,18 @@ public class ClienteServicio extends BaseServiciosImpl<Cliente, Long, ClienteRep
 
 	@Override
 	public boolean esCumple(Cliente cliente) {
-		if (cliente.getCumple() == null)
-			return false;
-
-		LocalDate hoy = LocalDate.now();
-		LocalDate cumple = cliente.getCumple();
-
-		return cumple.getMonth() == hoy.getMonth() && cumple.getDayOfMonth() == hoy.getDayOfMonth();
+		// TODO Auto-generated method stub
+		return false;
 	}
+
+	/*
+	 * @Override public boolean esCumple(Cliente cliente) { if (cliente.get == null)
+	 * return false;
+	 * 
+	 * LocalDate hoy = LocalDate.now(); LocalDate cumple = cliente.getClass();
+	 * 
+	 * return cumple.getMonth() == hoy.getMonth() && cumple.getDayOfMonth() ==
+	 * hoy.getDayOfMonth(); }
+	 */
 
 }
