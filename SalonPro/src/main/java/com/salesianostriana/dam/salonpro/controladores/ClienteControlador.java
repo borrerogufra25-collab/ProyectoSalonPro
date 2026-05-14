@@ -17,7 +17,7 @@ public class ClienteControlador {
 		Cliente cliente = new Cliente();
 		model.addAttribute("clienteForm", cliente);
 
-		return "cliente/formularioCliente";
+		return "clientes/formularioCliente";
 	}
 
 	@PostMapping("/addCliente")
