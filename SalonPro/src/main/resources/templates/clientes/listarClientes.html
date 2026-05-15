@@ -40,9 +40,16 @@
 				</thead>
 
 				<tbody>
-
-					<!-- Buscar aquí como se actualizan las tablas (Ejemplos Ángel) -->
-
+					<tr th:each="c : ${listaClientes}">
+						<td th:text="${c.id}">-</td>
+						<td th:text="${c.nombre}">-</td>
+						<td th:text="${c.telefono}">-</td>
+						<td th:text="${c.email}">-</td>
+						<td th:text="${#temporals.format(c.cumple, 'dd/MM/yyyy')}">-</td>
+						<td>
+							<a class="btn btn-sm btn-info" th:href="@{/formularioCliente/{id}(id=${c.id})}">Editar</a>
+						</td>
+					</tr>
 				</tbody>
 
 			</table>
