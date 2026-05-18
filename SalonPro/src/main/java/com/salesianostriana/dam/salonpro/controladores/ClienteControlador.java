@@ -42,7 +42,7 @@ public class ClienteControlador {
 	@PostMapping("/inicioAdmin/clientes/nuevo/submit")
 	public String submitCliente(@ModelAttribute("clienteForm") Cliente cliente) {
 		clienteServicio.save(cliente);
-		return "redirect:/inicioAdmin/clientes/nuevo";
+		return "redirect:/inicioAdmin/clientes";
 	}
 
 	// Editar

@@ -19,8 +19,4 @@ public interface BaseServicios<T, ID> {
 
 	void deleteByID(ID id);
 
-	List<Cliente> obtenerCumple();
-
-	boolean esCumple(Cliente cliente);
-
 }

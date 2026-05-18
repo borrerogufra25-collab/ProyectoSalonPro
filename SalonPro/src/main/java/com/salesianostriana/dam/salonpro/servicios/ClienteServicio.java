@@ -14,13 +14,11 @@ public class ClienteServicio extends BaseServiciosImpl<Cliente, Long, ClienteRep
 
 	private ClienteRepositorio repositorio;
 
-	@Override
 	public List<Cliente> obtenerCumple() {
 		LocalDate hoy = LocalDate.now();
 		return repositorio.findByCumple(hoy.getMonthValue(), hoy.getDayOfMonth());
 	}
 
-	@Override
 	public boolean esCumple(Cliente cliente) {
 		if (cliente.getCumple() == null)
 			return false;

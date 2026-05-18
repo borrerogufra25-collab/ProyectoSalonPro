@@ -25,7 +25,7 @@ public class Cliente {
 
 	@Id
 	@GeneratedValue
-	private long id;
+	private Long id;
 
 	private String nombre, email, telefono;
 	private int numCortes;
