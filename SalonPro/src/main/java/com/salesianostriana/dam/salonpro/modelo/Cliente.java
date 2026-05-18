@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -32,10 +33,10 @@ public class Cliente {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate cumple;
 
-	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Cita> listaCitas;
 
-	public Cliente(long id, String nombre, String email, String telefono, LocalDate cumple) {
+	public Cliente(String nombre, String email, String telefono, LocalDate cumple) {
 		super();
 		this.nombre = nombre;
 		this.email = email;
