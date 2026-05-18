@@ -1,7 +1,9 @@
 package com.salesianostriana.dam.salonpro.modelo;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
@@ -33,9 +35,6 @@ public class Cita {
 	@JoinColumn(name = "id_cliente", foreignKey = @ForeignKey(name = "fk_cita_cliente"))
 	private Cliente cliente;
 
-	/*
-	 * // Preguntar a Luismi ??
-	 * 
-	 * @OneToMany private Servicio servicio;
-	 */
+	@OneToMany(mappedBy = "cita", cascade = CascadeType.ALL)
+	private List<CitaServicio> servicios;
 }
