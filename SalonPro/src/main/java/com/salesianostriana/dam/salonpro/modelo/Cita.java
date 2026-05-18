@@ -26,7 +26,7 @@ public class Cita {
 
 	@Id
 	@GeneratedValue
-	private long codigo;
+	private Long codigo;
 
 	private LocalDateTime fecha;
 	private double precioTotal;
