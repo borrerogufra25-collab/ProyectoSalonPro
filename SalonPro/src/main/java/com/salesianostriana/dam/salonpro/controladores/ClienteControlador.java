@@ -1,11 +1,12 @@
 package com.salesianostriana.dam.salonpro.controladores;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
@@ -19,26 +20,63 @@ public class ClienteControlador {
 
 	private final ClienteServicio clienteServicio;
 
-	@GetMapping("/nuevoCliente")
-	public String nuevoCliente(Model model) {
+	// Listar
 
-		Cliente cliente = new Cliente();
-		model.addAttribute("clienteForm", cliente);
-
-		return "clientes/formularioCliente";
-	}
-
-	@PostMapping("/addCliente")
-	public String submitCliente(@ModelAttribute("clienteForm") Cliente cliente, Model model) {
-		model.addAttribute("cliente", cliente);
-		return "redirect:/inicioAdmin";
-	}
-
-	@GetMapping("/clientes/listarClientes")
+	@GetMapping("/inicioAdmin/clientes")
 	public String listarClientes(Model model) {
 
 		model.addAttribute("listaClientes", clienteServicio.findAll());
 		return "clientes/listarClientes";
+	}
+
+	// Crear
+
+	@GetMapping("/inicioAdmin/clientes/nuevo")
+	public String nuevoCliente(Model model) {
+
+		model.addAttribute("nuevoCliente", new Cliente());
+
+		return "clientes/formularioCliente";
+	}
+
+	@PostMapping("/inicioAdmin/clientes/nuevo/submit")
+	public String submitCliente(@ModelAttribute("clienteForm") Cliente cliente) {
+		clienteServicio.save(cliente);
+		return "redirect:/inicioAdmin/clientes/nuevo";
+	}
+
+	// Editar
+
+	@GetMapping("/inicioAdmin/clientes/editar/{id}")
+	public String formularioEdicion(@PathVariable("id") long id, Model model) {
+		Optional<Cliente> cEditar = clienteServicio.findById(id);
+
+		if (cEditar.isPresent()) {
+			model.addAttribute("nuevoCliente", cEditar.get());
+			return "clientes/formularioCliente";
+		} else {
+			return "redirect:/inicioAdmin/clientes";
+		}
+	}
+
+	@PostMapping("/inicioAdmin/clientes/editar/submit")
+	public String submitFormularioEdicion(@ModelAttribute("cliente") Cliente c) {
+		clienteServicio.edit(c);
+		return "redirect:/inicioAdmin/clientes";
+
+	}
+
+	// Borrar
+
+	@GetMapping("/inicioAdmin/clientes/borrar/{id}")
+	public String borrar(@PathVariable("id") long id) {
+
+		Optional<Cliente> cBorrar = clienteServicio.findById(id);
+		if (cBorrar.isPresent()) {
+			clienteServicio.delete(cBorrar.get());
+			return "redirect:/inicioAdmin/clientes";
+		}
+		return "redirect:/inicioAdmin/clientes";
 	}
 
 }

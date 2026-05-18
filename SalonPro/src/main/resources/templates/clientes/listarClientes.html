@@ -20,7 +20,7 @@
 		<div class="d-flex justify-content-between align-items-center mb-4">
 			<h2 class="fw-bold text-warning">Lista de clientes</h2>
 
-			<a class="btn btn-warning fw-bold text-black" th:href="@{/clientes/formularioCliente}">
+			<a class="btn btn-warning fw-bold text-black" th:href="@{/inicioAdmin/clientes/nuevo}">
 				Nuevo Cliente
 			</a>
 		</div>
@@ -47,7 +47,33 @@
 						<td th:text="${c.email}">-</td>
 						<td th:text="${#temporals.format(c.cumple, 'dd/MM/yyyy')}">-</td>
 						<td>
-							<a class="btn btn-sm btn-info" th:href="@{/formularioCliente/{id}(id=${c.id})}">Editar</a>
+							<a class="btn btn-sm btn-warning"
+								th:href="@{/inicioAdmin/clientes/editar/{id}(id=${c.id})}">Editar</a>
+							<button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+								data-bs-target="#modalBorrar">
+								Borrar
+							</button>
+
+							<div class="modal" id="modalBorrar">
+								<div class="modal-dialog">
+									<div class="modal-content bg-dark">
+
+										<div class="modal-header text-warning">
+											<h4 class="modal-title">¿Estás seguro?</h4>
+											<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+										</div>
+
+										<div class="modal-body">
+											<a class="btn btn-danger mx-5"
+												th:href="@{/inicioAdmin/clientes/borrar/{id}(id=${c.id})}">SI</a>
+
+											<button type="button" class="btn btn-secondary mx-5"
+												data-bs-dismiss="modal">No</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
 						</td>
 					</tr>
 				</tbody>

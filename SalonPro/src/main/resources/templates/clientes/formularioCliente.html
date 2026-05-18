@@ -19,9 +19,15 @@
 			Nuevo Cliente
 		</h2>
 
-		<!-- Falta th:action="addCliente" en el form (el método que mete el cliente en la db) -->
-		<form method="POST" th:action="addCliente" th:object="${clienteForm}"
+		<form method="POST" th:object="${nuevoCliente}"
+			th:action="*{id} != 0 ?  @{/inicioAdmin/clientes/editar/submit} : @{/inicioAdmin/clientes/nuevo/submit}"
 			class="bg-dark p-4 border border-warning rounded">
+
+			<div class="mb-3">
+				<label class="form-label text-warning fw-bold" for="id">ID</label>
+				<input th:if="*{id != 0}" type="hidden" class="form-control border-warning" name="id" th:field="*{id}"
+					required>
+			</div>
 
 			<div class="mb-3">
 				<label class="form-label text-warning fw-bold" for="nombre">Nombre</label>
@@ -47,9 +53,8 @@
 				<input type="date" class="form-control border-warning" name="fecha" th:field="*{cumple}">
 			</div>
 
-			<!-- TODO: cambiar este enlace a la vista de cliente -->
 			<div class="d-flex justify-content-between mt-4">
-				<a href="#" class="btn btn-outline-warning">
+				<a th:href="@{/inicioAdmin/clientes}" class="btn btn-outline-warning">
 					<i class="bi bi-arrow-left"></i> Volver
 				</a>
 

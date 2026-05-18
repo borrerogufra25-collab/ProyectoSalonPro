@@ -33,14 +33,13 @@ public abstract class BaseServiciosImpl<T, ID, R extends JpaRepository<T, ID>> i
 
 	@Override
 	public void delete(T t) {
-		// TODO Auto-generated method stub
+		repository.delete(t);
 
 	}
 
 	@Override
-	public void deleteByID(T t) {
-		// TODO Auto-generated method stub
-
+	public void deleteByID(ID id) {
+		repository.deleteById(id);
 	}
 
 }
