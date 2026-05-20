@@ -15,11 +15,6 @@ public class PrincipalControlador {
 		return "principal";
 	}
 
-	@GetMapping("/inicioSesion")
-	public String inicioSesion() {
-		return "inicioSesion";
-	}
-
 	@GetMapping("/inicioAdmin")
 	public String inicioAdmin() {
 		return "inicioAdmin";

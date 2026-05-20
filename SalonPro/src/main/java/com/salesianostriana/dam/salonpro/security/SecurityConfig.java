@@ -1,5 +1,6 @@
 package com.salesianostriana.dam.salonpro.security;
 
+import com.salesianostriana.dam.salonpro.controladores.CitaControlador;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,10 +9,17 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+	private final CitaControlador citaControlador;
+
+	SecurityConfig(CitaControlador citaControlador) {
+		this.citaControlador = citaControlador;
+	}
 
 	@Bean
 	public InMemoryUserDetailsManager userDetailsService() {
@@ -29,7 +37,18 @@ public class SecurityConfig {
 		http.authorizeHttpRequests((authz) -> authz.requestMatchers("/inicioAdmin/**", "/inicioUsuario")
 				.authenticated()
 				.anyRequest()
-				.permitAll());
+				.permitAll())
+				// Borra el ?error y continue por si acaso
+				.requestCache(cache -> {
+					HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+					requestCache.setMatchingRequestParameterName(null);
+					cache.requestCache(requestCache);
+				})
+				.formLogin(form -> form.loginPage("/inicioSesion")
+						.permitAll()
+				// .successHandler()
+
+				);
 
 		// Añadimos esto para poder acceder a la consola de H2
 		// con Spring Security habilitado.
