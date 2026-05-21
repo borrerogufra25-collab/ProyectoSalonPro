@@ -1,4 +1,4 @@
-package com.salesianostriana.dam.salonpro.utils;
+package com.salesianostriana.dam.salonpro.utilidades;
 
 import java.time.Duration;
 import java.time.LocalDate;

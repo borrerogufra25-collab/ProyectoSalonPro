@@ -17,10 +17,11 @@
 
 	<header th:replace="~{fragments/cabeceraUsuario :: cabeceraUsuario}"></header>
 
-	<main class="container py-5">
+	<main class="container py-5" th:each="c : ${listaClientes}">
 
 		<h1 class="text-warning mb-4">Área Usuario</h1>
-		<p class="mb-5">Bienvenido. Puedes gestionar tus citas desde aquí.</p>
+		<p class="mb-5">Bienvenido <strong class="text-warning" th:text="${c.nombre}">Usuario</strong>. Puedes gestionar
+			tus citas desde aquí.</p>
 
 		<div class="row g-4">
 

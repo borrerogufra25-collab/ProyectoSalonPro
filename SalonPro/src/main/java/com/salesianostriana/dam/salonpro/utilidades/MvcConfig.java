@@ -1,4 +1,4 @@
-package com.salesianostriana.dam.salonpro.utils;
+package com.salesianostriana.dam.salonpro.utilidades;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

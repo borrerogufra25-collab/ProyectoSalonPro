@@ -3,6 +3,7 @@ package com.salesianostriana.dam.salonpro.controladores;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,8 +21,8 @@ public class PrincipalControlador {
 		return "inicioAdmin";
 	}
 
-	@GetMapping("/inicioUsuario")
-	public String inicioUsuario() {
+	@GetMapping("/inicioUsuario/{id}")
+	public String inicioUsuario(@PathVariable("id") long id) {
 		return "inicioUsuario";
 	}
 
