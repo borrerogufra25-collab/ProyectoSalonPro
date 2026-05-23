@@ -36,5 +36,5 @@ public class Cita {
 	private Cliente cliente;
 
 	@OneToMany(mappedBy = "cita", cascade = CascadeType.ALL)
-	private List<CitaServicio> servicios;
+	private List<CitaServicio> citaServicios;
 }

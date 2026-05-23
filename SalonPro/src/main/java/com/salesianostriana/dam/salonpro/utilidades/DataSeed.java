@@ -1,8 +1,7 @@
 /* Para ir rápido:
  * Email: usuario@usuario.com
  * Contraseña: user
- * 
- * Email: admin@admin.com
+ * * Email: admin@admin.com
  * Contraseña: admin
  */
 
@@ -10,14 +9,18 @@ package com.salesianostriana.dam.salonpro.utilidades;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.salesianostriana.dam.salonpro.modelo.Cita;
+import com.salesianostriana.dam.salonpro.modelo.CitaServicio;
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
 import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.modelo.UserRole;
+import com.salesianostriana.dam.salonpro.repositorios.CitaRepositorio;
 import com.salesianostriana.dam.salonpro.repositorios.ClienteRepositorio;
 import com.salesianostriana.dam.salonpro.repositorios.ServicioRepositorio;
 
@@ -30,6 +33,7 @@ public class DataSeed {
 
 	private final ClienteRepositorio clienteRepositorio;
 	private final ServicioRepositorio servicioRepositorio;
+	private final CitaRepositorio citaRepositorio;
 	private final PasswordEncoder passwordEncoder;
 
 	@PostConstruct
@@ -125,6 +129,55 @@ public class DataSeed {
 						.duracion(Duration.ofMinutes(60))
 						.build());
 
-		servicioRepositorio.saveAll(listaServicios);
+		List<Servicio> serviciosGuardados = servicioRepositorio.saveAll(listaServicios);
+
+		// Citas
+
+		Cita cita1 = Cita.builder()
+				.fecha(LocalDateTime.now()
+						.plusDays(1)
+						.withHour(10)
+						.withMinute(0))
+				.cliente(usuarioPrueba)
+				.precioTotal(serviciosGuardados.get(0)
+						.getPrecio())
+				.build();
+
+		CitaServicio cs1 = CitaServicio.builder()
+				.cita(cita1)
+				.servicio(serviciosGuardados.get(0))
+				.observaciones("Primera vez, quiere el degradado bajito")
+				.build();
+
+		// Añadir el servicio a la cita
+		cita1.setCitaServicios(List.of(cs1));
+
+		Cita cita2 = Cita.builder()
+				.fecha(LocalDateTime.now()
+						.plusDays(3)
+						.withHour(17)
+						.withMinute(30))
+				.cliente(clientesOriginales.get(0))
+				.precioTotal(serviciosGuardados.get(1)
+						.getPrecio()
+						+ serviciosGuardados.get(2)
+								.getPrecio())
+				.build();
+
+		CitaServicio cs2 = CitaServicio.builder()
+				.cita(cita2)
+				.servicio(serviciosGuardados.get(1))
+				.observaciones("Usar champú para pelo seco")
+				.build();
+
+		CitaServicio cs3 = CitaServicio.builder()
+				.cita(cita2)
+				.servicio(serviciosGuardados.get(2))
+				.observaciones("Tinte color cobrizo brillante")
+				.build();
+
+		cita2.setCitaServicios(List.of(cs2, cs3));
+
+		citaRepositorio.saveAll(List.of(cita1, cita2));
 	}
 }

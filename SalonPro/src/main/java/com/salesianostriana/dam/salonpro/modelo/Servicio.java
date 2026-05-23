@@ -1,12 +1,15 @@
 package com.salesianostriana.dam.salonpro.modelo;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +31,9 @@ public class Servicio {
 
 	@DateTimeFormat(iso = DateTimeFormat.ISO.NONE)
 	private Duration duracion;
+
+	@OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
+	private List<CitaServicio> citaServicios;
 
 	// Prueba
 
