@@ -7,6 +7,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -27,11 +29,14 @@ public class Cliente {
 	@GeneratedValue
 	private Long id;
 
-	private String nombre, email, telefono;
+	private String nombre, email, telefono, contrasenia;
 	private int numCortes;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate cumple;
+
+	@Enumerated(EnumType.STRING)
+	private UserRole role;
 
 	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Cita> listaCitas;

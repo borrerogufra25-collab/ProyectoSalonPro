@@ -18,7 +18,7 @@
 
 	<header th:replace="~{fragments/cabecera :: cabecera}"></header>
 
-	<main class="container d-flex justify-content-center align-items-center min-vh-100">
+	<main class="container d-flex justify-content-center align-items-center my-5">
 
 		<div class="card bg-dark border-warning p-4 shadow">
 
@@ -26,16 +26,24 @@
 				<i class="bi bi-person-circle me-2"></i>Iniciar Sesión
 			</h3>
 
-			<form>
+			<div th:if="${param.error}" class="text-danger text-center">
+				Usuario o contraseña incorrectos
+			</div>
+			<div th:if="${param.logout}" class="text-success text-center">
+				Has cerrado sesión
+			</div>
+
+			<form th:action="@{/login}" method="post">
 				<div class="mb-3">
 					<label class="form-label text-warning fw-bold">Usuario</label>
-					<input type="text" class="form-control bg-white bg-opacity-25 text-white border-warning" required>
+					<input type="text" name="username"
+						class="form-control bg-white bg-opacity-25 text-white border-warning" required>
 				</div>
 
 				<div class="mb-3">
 					<label class="form-label text-warning fw-bold">Contraseña</label>
-					<input type="password" class="form-control bg-white bg-opacity-25 text-white border-warning"
-						required>
+					<input type="password" name="password"
+						class="form-control bg-white bg-opacity-25 text-white border-warning" required>
 				</div>
 
 				<button type="submit" class="btn btn-warning w-100 fw-bold text-black">
