@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.salonpro.repositorios;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,6 @@ public interface ClienteRepositorio extends JpaRepository<Cliente, Long> {
 
 	@Query("SELECT c FROM Cliente c WHERE MONTH(c.cumple) = :mes AND DAY(c.cumple) = :dia")
 	List<Cliente> findByCumple(@Param("mes") int mes, @Param("dia") int dia);
+
+	Optional<Cliente> findByEmail(String email);
 }
