@@ -35,6 +35,6 @@ public class Cita {
 	@JoinColumn(name = "id_cliente", foreignKey = @ForeignKey(name = "fk_cita_cliente"))
 	private Cliente cliente;
 
-	@OneToMany(mappedBy = "cita", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cita", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CitaServicio> citaServicios;
 }

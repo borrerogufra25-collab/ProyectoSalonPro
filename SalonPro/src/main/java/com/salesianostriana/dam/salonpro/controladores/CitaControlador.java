@@ -1,14 +1,18 @@
 package com.salesianostriana.dam.salonpro.controladores;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.salesianostriana.dam.salonpro.modelo.Cita;
-import com.salesianostriana.dam.salonpro.servicios.CitaServicio;
+import com.salesianostriana.dam.salonpro.modelo.CitaServicio;
+import com.salesianostriana.dam.salonpro.servicios.CitaService;
 import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
 import com.salesianostriana.dam.salonpro.servicios.ServiciosServicio;
 
@@ -18,19 +22,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CitaControlador {
 
-	private final CitaServicio citaServicio;
+	private final CitaService citaService;
 	private final ClienteServicio clienteServicio;
 	private final ServiciosServicio serviciosServicio;
 
-	// Listar
-
 	@GetMapping("/inicioAdmin/citas")
 	public String listar(Model model) {
-		model.addAttribute("listaCitas", citaServicio.findAll());
+		model.addAttribute("listaCitas", citaService.findAll());
 		return "citas/listarCitas";
 	}
-
-	// Crear
 
 	@GetMapping("/inicioAdmin/citas/nueva")
 	public String nueva(Model model) {
@@ -41,35 +41,31 @@ public class CitaControlador {
 	}
 
 	@PostMapping("/inicioAdmin/citas/nueva/submit")
-	public String submitNueva(@ModelAttribute("cita") Cita cita) {
-		citaServicio.save(cita);
+	public String submitNueva(@ModelAttribute("cita") Cita cita, @RequestParam("observaciones") String observaciones) {
+
+		// TODO: no se que mierda pasa
+
 		return "redirect:/inicioAdmin/citas";
 	}
-
-	// Editar
 
 	@GetMapping("/inicioAdmin/citas/editar/{id}")
 	public String editar(@PathVariable Long id, Model model) {
-		Cita cita = citaServicio.findById(id)
-				.orElseThrow();
-		model.addAttribute("cita", cita);
-		model.addAttribute("listaClientes", clienteServicio.findAll());
-		model.addAttribute("listaServicios", serviciosServicio.findAll());
-		return "citas/formularioCita";
+
+		// TODO: no se que mierda pasa
+
 	}
 
 	@PostMapping("/inicioAdmin/citas/editar/submit")
-	public String submitEditar(@ModelAttribute("cita") Cita cita) {
-		citaServicio.edit(cita);
+	public String submitEditar(@ModelAttribute("cita") Cita cita, @RequestParam("observaciones") String obs) {
+
+		// TODO: no se que mierda pasa
+
 		return "redirect:/inicioAdmin/citas";
 	}
 
-	// TODO: no funciona
-	// Borrar
-
 	@GetMapping("/inicioAdmin/citas/borrar/{id}")
 	public String borrar(@PathVariable Long id) {
-		citaServicio.deleteByID(id);
+		citaService.deleteByID(id);
 		return "redirect:/inicioAdmin/citas";
 	}
 }

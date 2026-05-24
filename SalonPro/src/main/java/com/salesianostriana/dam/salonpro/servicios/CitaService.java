@@ -7,6 +7,6 @@ import com.salesianostriana.dam.salonpro.repositorios.CitaRepositorio;
 import com.salesianostriana.dam.salonpro.serviciosBase.BaseServiciosImpl;
 
 @Service
-public class CitaServicio extends BaseServiciosImpl<Cita, Long, CitaRepositorio> {
+public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> {
 
 }
