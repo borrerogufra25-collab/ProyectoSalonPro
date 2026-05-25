@@ -1,5 +1,7 @@
 package com.salesianostriana.dam.salonpro.modelo;
 
+import java.util.Optional;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

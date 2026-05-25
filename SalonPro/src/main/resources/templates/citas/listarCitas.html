@@ -37,6 +37,7 @@
 						<th>Fecha y Hora</th>
 						<th>Cliente</th>
 						<th>Precio Total</th>
+						<!-- <th>Observaciones</th> -->
 						<th>Opciones</th>
 					</tr>
 				</thead>
@@ -47,6 +48,7 @@
 						<td th:text="${#temporals.format(c.fecha, 'dd/MM/yyyy HH:mm')}">-</td>
 						<td th:text="${c.cliente.nombre}">-</td>
 						<td th:text="${c.precioTotal} + ' €'">-</td>
+						<!--TODO: Peta <td th:text="${observaciones}"></td> -->
 
 						<td>
 							<a class="btn btn-sm btn-warning"

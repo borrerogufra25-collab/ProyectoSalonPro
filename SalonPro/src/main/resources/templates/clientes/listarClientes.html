@@ -34,6 +34,7 @@
 				<thead class="table-dark">
 					<tr class="text-warning">
 						<th>ID</th>
+						<th>Nº Cortes</th>
 						<th>Nombre</th>
 						<th>Teléfono</th>
 						<th>Email</th>
@@ -45,6 +46,7 @@
 				<tbody>
 					<tr th:each="c : ${listaClientes}">
 						<td th:text="${c.id}">-</td>
+						<td th:text="${c.numCortes}">-</td>
 						<td th:text="${c.nombre}">-</td>
 						<td th:text="${c.telefono}">-</td>
 						<td th:text="${c.email}">-</td>
