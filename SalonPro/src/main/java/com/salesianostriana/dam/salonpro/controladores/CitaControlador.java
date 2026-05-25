@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.salesianostriana.dam.salonpro.modelo.Cita;
 import com.salesianostriana.dam.salonpro.modelo.CitaServicio;
+import com.salesianostriana.dam.salonpro.modelo.Cliente;
 import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.servicios.CitaService;
 import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
@@ -47,9 +48,11 @@ public class CitaControlador {
 
 	@PostMapping("/inicioAdmin/citas/nueva/submit")
 	public String submitNueva(@ModelAttribute("cita") Cita cita, @RequestParam("servicioId") Long servicioId,
-			@RequestParam("observaciones") String observaciones) {
+			@RequestParam("clienteId") Long clienteId, @RequestParam("observaciones") String observaciones) {
 
 		Optional<Servicio> servicio = serviciosServicio.findById(servicioId);
+		Optional<Cliente> cliente = clienteServicio.findById(clienteId);
+		Optional<CitaServicio>citServ = 
 
 		CitaServicio detalle = CitaServicio.builder()
 				.cita(cita)
