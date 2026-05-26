@@ -148,7 +148,7 @@ public class DataSeed {
 		CitaServicio cs1 = CitaServicio.builder()
 				.cita(cita1)
 				.servicio(serviciosGuardados.get(0))
-				.observaciones("Quiere un mohicano")
+				.observaciones("Quiere un mohicano inverso")
 				.build();
 
 		// Añadir el servicio a la cita

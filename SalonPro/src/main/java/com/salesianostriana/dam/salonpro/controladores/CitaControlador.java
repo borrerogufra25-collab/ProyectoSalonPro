@@ -109,8 +109,16 @@ public class CitaControlador {
 	// Borrar
 
 	@GetMapping("/inicioAdmin/citas/borrar/{id}")
-	public String borrar(@PathVariable Long id) {
-		citaService.deleteByID(id);
+	public String borrar(@PathVariable("id") long id) {
+		citaService.findById(id)
+				.ifPresent(cita -> {
+					if (cita.getCliente() != null) {
+						cita.getCliente()
+								.getListaCitas()
+								.remove(cita);
+					}
+					citaService.delete(cita);
+				});
 		return "redirect:/inicioAdmin/citas";
 	}
 }
