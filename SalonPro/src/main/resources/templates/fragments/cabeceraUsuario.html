@@ -8,7 +8,7 @@
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
 			<div class="container-fluid">
 
-				<a class="navbar-brand text-warning fw-bold" href="/usuario/inicio">
+				<a class="navbar-brand text-warning fw-bold" th:href="@{/inicioUsuario}">
 					<i class="bi bi-person-circle me-2 fs-3"></i>Área Usuario
 				</a>
 
@@ -26,7 +26,7 @@
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link text-warning" href="#">Reservar Cita</a>
+							<a class="nav-link text-warning" th:href="@{/inicioUsuario/servicios}">Reservar Cita</a>
 						</li>
 
 					</ul>
