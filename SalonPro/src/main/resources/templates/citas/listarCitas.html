@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Listado de Clientes</title>
+	<title>Listado de Citas</title>
 
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -22,10 +22,10 @@
 	<main class="container py-4">
 
 		<div class="d-flex justify-content-between align-items-center mb-4">
-			<h2 class="fw-bold text-warning">Lista de clientes</h2>
+			<h2 class="fw-bold text-warning">Lista de citas</h2>
 
-			<a class="btn btn-warning fw-bold text-black" th:href="@{/inicioAdmin/clientes/nuevo}">
-				Nuevo Cliente
+			<a class="btn btn-warning fw-bold text-black" th:href="@{/inicioAdmin/citas/nueva}">
+				Nueva Cita
 			</a>
 		</div>
 
@@ -34,34 +34,33 @@
 
 				<thead class="table-dark">
 					<tr class="text-warning">
-						<th>ID</th>
-						<th>Nº Cortes</th>
-						<th>Nombre</th>
-						<th>Teléfono</th>
-						<th>Email</th>
-						<th>Cumpleaños</th>
+						<th>Código</th>
+						<th>Fecha y Hora</th>
+						<th>Cliente</th>
+						<th>Precio Total</th>
+						<th>Observaciones</th>
 						<th>Opciones</th>
 					</tr>
 				</thead>
 
 				<tbody>
-					<tr th:each="c : ${listaClientes}">
-						<td th:text="${c.id}">-</td>
-						<td th:text="${c.numCortes}">-</td>
-						<td th:text="${c.nombre}">-</td>
-						<td th:text="${c.telefono}">-</td>
-						<td th:text="${c.email}">-</td>
-						<td th:text="${#temporals.format(c.cumple, 'dd/MM/yyyy')}">-</td>
+					<tr th:each="c : ${listaCitas}">
+						<td th:text="${c.codigo}">-</td>
+						<td th:text="${#temporals.format(c.fecha, 'dd/MM/yyyy HH:mm')}">-</td>
+						<td th:text="${c.cliente.nombre}">-</td>
+						<td th:text="${c.precioTotal} + ' €'">-</td>
+						<td th:text="${!c.citaServicios.isEmpty()} ? ${c.citaServicios[0].observaciones} : '-'"></td>
+
 						<td>
 							<a class="btn btn-sm btn-warning"
-								th:href="@{/inicioAdmin/clientes/editar/{id}(id=${c.id})}">Editar</a>
+								th:href="@{/inicioAdmin/citas/editar/{id}(id=${c.codigo})}">Editar</a>
 
 							<button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-								th:data-bs-target="'#modalBorrar' + ${c.id}">
-								Borrar
+								th:data-bs-target="'#modalBorrar' + ${c.codigo}">Borrar
 							</button>
 
-							<div class="modal fade" th:id="'modalBorrar' + ${c.id}" tabindex="-1" aria-hidden="true">
+							<div class="modal fade" th:id="'modalBorrar' + ${c.codigo}" tabindex="-1"
+								aria-hidden="true">
 								<div class="modal-dialog modal-dialog-centered">
 									<div class="modal-content bg-dark border border-warning text-white">
 
@@ -72,22 +71,26 @@
 										</div>
 
 										<div class="modal-body text-center py-3">
-											<p>Vas a eliminar al cliente: <strong class="text-warning"
-													th:text="${c.nombre}">Cliente</strong></p>
+											<p>¿Estás seguro de que deseas eliminar la cita de
+												<strong class="text-warning"
+													th:text="${c.cliente.nombre}">Cliente</strong>?
+											</p>
 											<p class="text-danger small">Esta acción no se puede deshacer.</p>
 										</div>
 
 										<div
 											class="modal-footer border-top border-secondary d-flex justify-content-center">
 											<a class="btn btn-danger px-4"
-												th:href="@{/inicioAdmin/clientes/borrar/{id}(id=${c.id})}">Sí</a>
+												th:href="@{/inicioAdmin/citas/borrar/{id}(id=${c.codigo})}">
+												Sí
+											</a>
 											<button type="button" class="btn btn-secondary px-4"
 												data-bs-dismiss="modal">No</button>
 										</div>
+
 									</div>
 								</div>
 							</div>
-
 						</td>
 					</tr>
 				</tbody>
