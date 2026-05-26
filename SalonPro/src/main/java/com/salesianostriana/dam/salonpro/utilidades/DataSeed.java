@@ -1,8 +1,7 @@
 /* Para ir rápido:
  * Email: usuario@usuario.com
  * Contraseña: user
- * 
- * Email: admin@admin.com
+ * * Email: admin@admin.com
  * Contraseña: admin
  */
 
@@ -10,14 +9,18 @@ package com.salesianostriana.dam.salonpro.utilidades;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.salesianostriana.dam.salonpro.modelo.Cita;
+import com.salesianostriana.dam.salonpro.modelo.CitaServicio;
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
 import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.modelo.UserRole;
+import com.salesianostriana.dam.salonpro.repositorios.CitaRepositorio;
 import com.salesianostriana.dam.salonpro.repositorios.ClienteRepositorio;
 import com.salesianostriana.dam.salonpro.repositorios.ServicioRepositorio;
 
@@ -30,6 +33,7 @@ public class DataSeed {
 
 	private final ClienteRepositorio clienteRepositorio;
 	private final ServicioRepositorio servicioRepositorio;
+	private final CitaRepositorio citaRepositorio;
 	private final PasswordEncoder passwordEncoder;
 
 	@PostConstruct
@@ -38,46 +42,51 @@ public class DataSeed {
 		// Clientes
 
 		List<Cliente> clientesOriginales = List.of(Cliente.builder()
+				.numCortes(3)
 				.nombre("Pepito")
 				.telefono("696322304")
 				.email("futa@pera.com")
-				.contrasenia(passwordEncoder.encode("1234"))
+				.contrasenia(passwordEncoder.encode("user"))
 				.role(UserRole.USER)
 				.cumple(LocalDate.of(1998, 5, 11))
 				.build(),
 
 				Cliente.builder()
+						.numCortes(4)
 						.nombre("Michael Scott")
 						.telefono("600998877")
 						.email("michael@dundermifflin.com")
-						.contrasenia(passwordEncoder.encode("1234"))
+						.contrasenia(passwordEncoder.encode("user"))
 						.role(UserRole.USER)
 						.cumple(LocalDate.of(1964, 3, 15))
 						.build(),
 
 				Cliente.builder()
+						.numCortes(1)
 						.nombre("Walter White")
 						.telefono("600112233")
 						.email("walter@white.com")
-						.contrasenia(passwordEncoder.encode("1234"))
+						.contrasenia(passwordEncoder.encode("user"))
 						.role(UserRole.USER)
 						.cumple(LocalDate.of(1958, 9, 7))
 						.build(),
 
 				Cliente.builder()
+						.numCortes(5)
 						.nombre("Jesse Pinkman")
 						.telefono("622334455")
 						.email("jesse@pinkman.com")
-						.contrasenia(passwordEncoder.encode("1234"))
+						.contrasenia(passwordEncoder.encode("user"))
 						.role(UserRole.USER)
 						.cumple(LocalDate.of(1984, 9, 24))
 						.build(),
 
 				Cliente.builder()
+						.numCortes(17)
 						.nombre("Saul Goodman")
 						.telefono("699887766")
 						.email("saul@goodman.com")
-						.contrasenia(passwordEncoder.encode("1234"))
+						.contrasenia(passwordEncoder.encode("user"))
 						.role(UserRole.USER)
 						.cumple(LocalDate.of(1960, 11, 12))
 						.build());
@@ -89,7 +98,7 @@ public class DataSeed {
 		Cliente usuarioPrueba = Cliente.builder()
 				.nombre("Usuario de Prueba")
 				.telefono("111222333")
-				.email("usuario@usuario.com")
+				.email("user@user.com")
 				.contrasenia(passwordEncoder.encode("user"))
 				.role(UserRole.USER)
 				.build();
@@ -125,6 +134,51 @@ public class DataSeed {
 						.duracion(Duration.ofMinutes(60))
 						.build());
 
-		servicioRepositorio.saveAll(listaServicios);
+		List<Servicio> serviciosGuardados = servicioRepositorio.saveAll(listaServicios);
+
+		// Citas
+
+		Cita cita1 = Cita.builder()
+				.fecha(LocalDateTime.now())
+				.cliente(usuarioPrueba)
+				.precioTotal(serviciosGuardados.get(0)
+						.getPrecio())
+				.build();
+
+		CitaServicio cs1 = CitaServicio.builder()
+				.cita(cita1)
+				.servicio(serviciosGuardados.get(0))
+				.observaciones("Quiere un mohicano inverso")
+				.build();
+
+		// Añadir el servicio a la cita
+		cita1.setCitaServicios(List.of(cs1));
+
+		Cita cita2 = Cita.builder()
+				.fecha(LocalDateTime.now()
+						.withHour(17)
+						.withMinute(30))
+				.cliente(clientesOriginales.get(0))
+				.precioTotal(serviciosGuardados.get(1)
+						.getPrecio()
+						+ serviciosGuardados.get(2)
+								.getPrecio())
+				.build();
+
+		CitaServicio cs2 = CitaServicio.builder()
+				.cita(cita2)
+				.servicio(serviciosGuardados.get(1))
+				.observaciones("Usar champú para calvos")
+				.build();
+
+		CitaServicio cs3 = CitaServicio.builder()
+				.cita(cita2)
+				.servicio(serviciosGuardados.get(2))
+				.observaciones("Tinte color fuxia")
+				.build();
+
+		cita2.setCitaServicios(List.of(cs2, cs3));
+
+		citaRepositorio.saveAll(List.of(cita1, cita2));
 	}
 }
