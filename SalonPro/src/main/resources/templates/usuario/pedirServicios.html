@@ -27,6 +27,8 @@
 
 					<div class="mb-3">
 						<label class="form-label text-warning fw-bold">Cliente</label>
+						<p th:each="c : ${listarServicios}">Usuario</p>
+						<p th:text="${c.nombre}"></p>
 					</div>
 
 					<div class="mb-3">

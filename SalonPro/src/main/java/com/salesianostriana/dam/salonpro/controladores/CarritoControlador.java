@@ -1,7 +1,7 @@
 package com.salesianostriana.dam.salonpro.controladores;
 
+import java.security.Principal;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,14 +23,17 @@ public class CarritoControlador {
 
 	private final CarritoServicio carritoServicio;
 	private final ServiciosServicio serviciosServicio;
+	private final ClienteServicio clienteServicio;
 
 	// Listar
 
 	@GetMapping("/inicioUsuario/servicios")
-	public String listarServicios(Model model) {
+	public String listarServicios(Model model, Principal principal) {
+		Cliente cliente = clienteServicio.findById(principal.getName());
 
 		model.addAttribute("productos", serviciosServicio.findAll());
 		model.addAttribute("carrito", carritoServicio.getProductsInCart());
+		model.addAttribute("cliente", clienteServicio.findById(cliente.getId()));
 
 		return "usuario/pedirServicios";
 	}
