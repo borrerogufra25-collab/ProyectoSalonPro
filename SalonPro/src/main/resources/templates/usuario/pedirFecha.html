@@ -19,50 +19,92 @@
 
 	<header th:replace="~{fragments/cabeceraUsuario :: cabeceraUsuario}"></header>
 
-	<!-- Calendario -->
+	<main class="row justify-content-center">
 
+		<!-- Calendario -->
 
-	<!-- Carro -->
+		<h3 class="text-warning"><i class="bi bi-calendar-plus me-2"></i>Seleccionar fecha y hora</h3>
 
-	<div class="col-md-5">
+		<div class="row justify-content-center col-md-3">
 
-		<h3 class="text-warning">Tu pedido</h3>
+			<div th:if="${param.error}" class="alert alert-danger">
+				Error: Ya existe una cita en esa fecha/hora.
+			</div>
 
-		<ul class="list-group mb-3">
-
-			<li class="list-group-item bg-dark text-white-50" th:if="${#maps.isEmpty(carrito)}">
-				Añade algún servicio
-			</li>
-
-			<li class="list-group-item bg-dark text-warning" th:each="entry : ${carrito}">
-
-				<div class="d-flex justify-content-between">
-					<span>
-						<strong class="pe-4" th:text="${entry.key.nombre}">Nombre</strong>
-						<span th:text="${entry.key.precio}">0</span> €
-					</span>
-
-					<a th:href="@{'/carrito/borrar/' + ${entry.key.id}}" class="btn btn-sm btn-outline-danger">
-						<i class="bi bi-trash"></i>
-					</a>
-
+			<form>
+				<div class="mb-3">
+					<label class="form-label text-warning fw-bold" th:text="${c.nombre}">Cliente</label>
+					<input type="hidden" th:selected="${cita.cliente != null and cita.cliente.id == c.id}"
+						th:text="${c.nombre}">
 				</div>
-			</li>
-		</ul>
-		<div class="pb-5">
-			<h5 class="text-warning">Total: <span th:text="${#numbers.formatCurrency(total_carrito)}"></span>
-			</h5>
 
+				<div class="mb-3">
+					<label class="form-label text-warning fw-bold">Servicio</label>
+					<select class="form-select border-warning bg-white" name="servicioId" id="servicioSelect" required>
+						<option value="" disabled>Selecciona un servicio...</option>
+						<option th:each="s : ${listaServicios}" th:value="${s.id}"
+							th:selected="${cita.citaServicios != null and !cita.citaServicios.isEmpty() and cita.citaServicios[0].servicio.id == s.id}"
+							th:text="${s.nombre} + ' (' + ${s.precio} + ' €)'"></option>
+					</select>
+					<input type="hidden" th:field="*{codigo}" />
 
-			<a href="#" class="btn btn-primary mt-3">
-				Añadir otro servicio
-			</a>
+					<div class="mb-3">
+						<label class="form-label text-warning fw-bold">Fecha y Hora</label>
+						<input type="datetime-local" th:field="*{fecha}"
+							class="form-control border-warning bg-white text-dark" required>
+					</div>
 
-			<a href="#" class="btn btn-success mt-3 ms-2">
-				Confirmar
-			</a>
+					<div class="mb-3">
+						<label class="form-label text-warning fw-bold">Observaciones</label>
+						<textarea class="form-control border-warning bg-white" name="observaciones" rows="3"
+							th:text="${cita.citaServicios != null and !cita.citaServicios.isEmpty()} ? ${cita.citaServicios[0].observaciones} : ''"></textarea>
+					</div>
+
+			</form>
 		</div>
-	</div>
+
+		<!-- Carro -->
+
+		<div class="col-md-5 pt-5">
+
+			<h3 class="text-warning">Tu pedido</h3>
+
+			<ul class="list-group mb-3">
+
+				<li class="list-group-item bg-dark text-white-50" th:if="${#maps.isEmpty(carrito)}">
+					Añade algún servicio
+				</li>
+
+				<li class="list-group-item bg-dark text-warning" th:each="entry : ${carrito}">
+
+					<div class="d-flex justify-content-between">
+						<span>
+							<strong class="pe-4" th:text="${entry.key.nombre}">Nombre</strong>
+							<span th:text="${entry.key.precio}">0</span> €
+						</span>
+
+						<a th:href="@{'/carrito/borrar/' + ${entry.key.id}}" class="btn btn-sm btn-outline-danger">
+							<i class="bi bi-trash"></i>
+						</a>
+
+					</div>
+				</li>
+			</ul>
+			<div class="pb-5">
+				<h5 class="text-warning">Total: <span th:text="${#numbers.formatCurrency(total_carrito)}"></span>
+				</h5>
+
+
+				<a href="#" class="btn btn-primary mt-3">
+					Añadir otro servicio
+				</a>
+
+				<a href="#" class="btn btn-success mt-3 ms-2">
+					Confirmar
+				</a>
+			</div>
+		</div>
+	</main>
 
 	<footer th:replace="~{fragments/pie :: pie}"></footer>
 

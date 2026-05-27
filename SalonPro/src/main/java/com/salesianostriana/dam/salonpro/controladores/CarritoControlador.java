@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.salonpro.controladores;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.salesianostriana.dam.salonpro.modelo.Cliente;
 import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.servicios.CarritoServicio;
+import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
 import com.salesianostriana.dam.salonpro.servicios.ServiciosServicio;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +32,7 @@ public class CarritoControlador {
 		model.addAttribute("productos", serviciosServicio.findAll());
 		model.addAttribute("carrito", carritoServicio.getProductsInCart());
 
-		return "/usuario/pedirServicios";
+		return "usuario/pedirServicios";
 	}
 
 	// Meter
@@ -72,18 +75,20 @@ public class CarritoControlador {
 		return carritoServicio.calcularTotal();
 	}
 
-	// Siguiente
+	// Tramitar
 
-	// TODO
-	/*
-	 * @GetMapping("/carrito/tramitar") public String tramitar(Model model) {
-	 * 
-	 * if (carritoServicio.getProductsInCart() .isEmpty()) { return
-	 * "redirect:/inicioUsuario/servicios"; }
-	 * 
-	 * model.addAttribute("carrito", carritoServicio.getProductsInCart());
-	 * model.addAttribute("total", carritoServicio.calcularTotal());
-	 * 
-	 * return "ticket"; }
-	 */
+	@GetMapping("/carrito/tramitar")
+	public String tramitar(Model model) {
+
+		if (carritoServicio.getProductsInCart()
+				.isEmpty()) {
+			return "redirect:/inicioUsuario/servicios";
+		}
+
+		model.addAttribute("carrito", carritoServicio.getProductsInCart());
+		model.addAttribute("total", carritoServicio.calcularTotal());
+
+		return "ticket";
+	}
+
 }
