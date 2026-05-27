@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Añadir Fecha</title>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+		crossorigin="anonymous"></script>
+</head>
+
+<body class="bg-dark text-warning p-4">
+
+	<header th:replace="~{fragments/cabeceraUsuario :: cabeceraUsuario}"></header>
+
+	<!-- Calendario -->
+
+
+	<!-- Carro -->
+
+	<div class="col-md-5">
+
+		<h3 class="text-warning">Tu pedido</h3>
+
+		<ul class="list-group mb-3">
+
+			<li class="list-group-item bg-dark text-white-50" th:if="${#maps.isEmpty(carrito)}">
+				Añade algún servicio
+			</li>
+
+			<li class="list-group-item bg-dark text-warning" th:each="entry : ${carrito}">
+
+				<div class="d-flex justify-content-between">
+					<span>
+						<strong class="pe-4" th:text="${entry.key.nombre}">Nombre</strong>
+						<span th:text="${entry.key.precio}">0</span> €
+					</span>
+
+					<a th:href="@{'/carrito/borrar/' + ${entry.key.id}}" class="btn btn-sm btn-outline-danger">
+						<i class="bi bi-trash"></i>
+					</a>
+
+				</div>
+			</li>
+		</ul>
+		<div class="pb-5">
+			<h5 class="text-warning">Total: <span th:text="${#numbers.formatCurrency(total_carrito)}"></span>
+			</h5>
+
+
+			<a href="#" class="btn btn-primary mt-3">
+				Añadir otro servicio
+			</a>
+
+			<a href="#" class="btn btn-success mt-3 ms-2">
+				Confirmar
+			</a>
+		</div>
+	</div>
+
+	<footer th:replace="~{fragments/pie :: pie}"></footer>
+
+</body>
+
+</html>
