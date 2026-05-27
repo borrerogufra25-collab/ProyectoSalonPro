@@ -70,3 +70,4 @@ application-local.properties
 *.sqlite
 SalonPro/db/basedatos.mv.db
 /SalonPro/db
+*.db
