@@ -1,7 +1,9 @@
 package com.salesianostriana.dam.salonpro.controladores;
 
+import java.beans.Encoder;
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
+import com.salesianostriana.dam.salonpro.modelo.UserRole;
 import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class ClienteControlador {
 
 	private final ClienteServicio clienteServicio;
+	private final PasswordEncoder passwordEncoder;
 
 	// Listar
 
@@ -40,9 +44,29 @@ public class ClienteControlador {
 	}
 
 	@PostMapping("/inicioAdmin/clientes/nuevo/submit")
-	public String submitCliente(@ModelAttribute("clienteForm") Cliente cliente) {
+	public String submitCliente(@ModelAttribute("nuevoCliente") Cliente cliente) {
+		cliente.setRole(UserRole.USER);
+		cliente.setContrasenia(passwordEncoder.encode(cliente.getContrasenia()));
 		clienteServicio.save(cliente);
 		return "redirect:/inicioAdmin/clientes";
+	}
+
+	// Crear Login
+
+	@GetMapping("/nuevoCliente")
+	public String nuevoClienteLogin(Model model) {
+
+		model.addAttribute("nuevoCliente", new Cliente());
+
+		return "formularioLogin";
+	}
+
+	@PostMapping("/nuevoCliente/submit")
+	public String submitClienteLogin(@ModelAttribute("nuevoCliente") Cliente cliente) {
+		cliente.setRole(UserRole.USER);
+		cliente.setContrasenia(passwordEncoder.encode(cliente.getContrasenia()));
+		clienteServicio.save(cliente);
+		return "redirect:/inicioSesion";
 	}
 
 	// Editar

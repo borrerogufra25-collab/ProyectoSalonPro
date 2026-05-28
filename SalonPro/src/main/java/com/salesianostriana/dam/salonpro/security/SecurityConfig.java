@@ -21,7 +21,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((authz) -> authz
 				.requestMatchers("/", "/img/**", "/registro", "/inicioSesion", "/css/**", "/js/**", "/h2-console/**",
-						"/inicioAdmin/clientes/nuevo", "/inicioAdmin/clientes/nuevo/submit")
+						"/nuevoCliente", "/nuevoCliente/submit")
 				.permitAll()
 				.requestMatchers("/inicioAdmin/**")
 				.hasRole("ADMIN")
