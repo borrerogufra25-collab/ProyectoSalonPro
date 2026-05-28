@@ -42,7 +42,7 @@
 
 			<div class="mb-3">
 				<label class="form-label text-warning fw-bold" for="email">Email</label>
-				<input type="email" class="form-control border-warning" name="email" th:field="*{email}">
+				<input type="email" class="form-control border-warning" name="email" th:field="*{email}" required>
 				<small>Introduce un correo válido. Ej: ejemplo@correo.com</small>
 			</div>
 
@@ -56,6 +56,11 @@
 			<div class="mb-3">
 				<label class="form-label text-warning fw-bold" for="fecha">Fecha de nacimiento</label>
 				<input type="date" class="form-control border-warning" name="fecha" th:field="*{cumple}">
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label text-warning fw-bold" for="contrasenia">Contraseña</label>
+				<input type="password" class="form-control border-warning" name="contrasenia" th:field="*{contrasenia}">
 			</div>
 
 			<div class="d-flex justify-content-between mt-4">

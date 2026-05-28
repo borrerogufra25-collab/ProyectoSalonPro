@@ -19,12 +19,14 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((authz) -> authz.requestMatchers("/inicioAdmin/**")
+		http.authorizeHttpRequests((authz) -> authz
+				.requestMatchers("/", "/img/**", "/registro", "/inicioSesion", "/css/**", "/js/**", "/h2-console/**",
+						"/inicioAdmin/clientes/nuevo", "/inicioAdmin/clientes/nuevo/submit")
+				.permitAll()
+				.requestMatchers("/inicioAdmin/**")
 				.hasRole("ADMIN")
 				.requestMatchers("/inicioUsuario/**")
 				.hasRole("USER")
-				.requestMatchers("/", "/img/**", "/registro", "/inicioSesion", "/css/**", "/js/**", "/h2-console/**")
-				.permitAll()
 				.anyRequest()
 				.authenticated())
 				.formLogin(form -> form.loginPage("/inicioSesion")
