@@ -99,7 +99,11 @@ public class CarritoControlador {
 
 		if (carritoServicio.getProductsInCart()
 				.isEmpty()) {
-			return "redirect:/inicioUsuario/servicios";
+			return "redirect:/inicioUsuario/servicios?error=carritoVacio";
+		}
+
+		if (fechaHora.isBefore(LocalDateTime.now())) {
+			return "redirect:/inicioUsuario/servicios?error=fechaPasada";
 		}
 
 		Cliente cliente = clienteServicio.findByEmail(principal.getName())

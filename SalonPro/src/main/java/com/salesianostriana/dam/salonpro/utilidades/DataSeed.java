@@ -93,7 +93,7 @@ public class DataSeed {
 
 		clienteRepositorio.saveAll(clientesOriginales);
 
-		// Para probar
+		// Para probar roles
 
 		Cliente usuarioPrueba = Cliente.builder()
 				.nombre("Usuario de Prueba")
@@ -200,7 +200,8 @@ public class DataSeed {
 		// Citas
 
 		Cita cita1 = Cita.builder()
-				.fecha(LocalDateTime.now())
+				.fecha(LocalDateTime.now()
+						.plusHours(3))
 				.cliente(usuarioPrueba)
 				.precioTotal(serviciosGuardados.get(0)
 						.getPrecio())
@@ -217,8 +218,7 @@ public class DataSeed {
 
 		Cita cita2 = Cita.builder()
 				.fecha(LocalDateTime.now()
-						.withHour(17)
-						.withMinute(30))
+						.plusHours(5))
 				.cliente(clientesOriginales.get(0))
 				.precioTotal(serviciosGuardados.get(1)
 						.getPrecio()

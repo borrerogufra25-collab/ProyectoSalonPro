@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +29,9 @@ public class Cita {
 	@GeneratedValue
 	private Long codigo;
 
+	@FutureOrPresent(message = "La fecha no puede ser pasada")
 	private LocalDateTime fecha;
+
 	private double precioTotal;
 
 	@ManyToOne(fetch = FetchType.EAGER)

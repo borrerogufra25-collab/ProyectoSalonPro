@@ -16,115 +16,121 @@
 
 	<header th:replace="~{fragments/cabeceraUsuario :: cabeceraUsuario}"></header>
 
-	<div class="container">
-		<div class="row mb-4">
-			<div class="col-12">
-				<div class="alert alert-warning" th:if="${param.error} == 'conflicto'">
-					<i class="bi bi-exclamation-triangle-fill"></i>
-					No se puede reservar en ese horario porque ya existe una cita solapada. Elige otra hora.
+	<div class="alert alert-danger" th:if="${param.error != null and param.error[0] == 'carritoVacio'}">
+		<i class="bi bi-exclamation-octagon-fill"></i>
+		Debes añadir al menos un servicio antes de reservar la cita.
+	</div>
+
+	<div class="alert alert-danger" th:if="${param.error != null and param.error[0] == 'conflicto'}">
+		<i class="bi bi-exclamation-octagon-fill"></i>
+		No se puede reservar en ese horario porque ya existe una cita. Elige otra hora.
+	</div>
+
+	<div class="alert alert-danger" th:if="${param.error != null and param.error[0] == 'fechaPasada'}">
+		<i class="bi bi-clock-history"></i>
+		La fecha seleccionada no puede ser pasada.
+	</div>
+
+	<div class="row">
+
+		<!-- Fecha y hora -->
+		<div class="col-md-3">
+			<h3 class="text-warning">Seleccionar fecha y hora</h3>
+
+			<form th:action="@{/carrito/tramitar}" method="POST">
+
+				<div class="mb-3">
+					<label class="form-label text-warning fw-bold">Cliente</label>
+					<p class="text-white-50" th:text="${cliente != null ? cliente.nombre : 'Usuario'}">Usuario</p>
 				</div>
-			</div>
+
+				<div class="mb-3">
+					<label class="form-label text-warning fw-bold">Fecha y Hora</label>
+					<input name="fechaHora" type="datetime-local" class="form-control border-warning bg-white text-dark"
+						required>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label text-warning fw-bold">Observaciones</label>
+					<textarea class="form-control border-warning bg-white text-dark" name="observaciones"
+						rows="3"></textarea>
+				</div>
+
+				<button type="submit" class="btn btn-success w-100">
+					<i class="bi bi-check-circle"></i> Reservar cita
+				</button>
+
+			</form>
 		</div>
-		<div class="row">
 
-			<!-- Fecha y hora -->
-			<div class="col-md-3">
-				<h3 class="text-warning">Seleccionar fecha y hora</h3>
+		<!-- Servicios -->
+		<div class="col-md-5">
+			<h3 class="text-warning">Servicios disponibles</h3>
 
-				<form th:action="@{/carrito/tramitar}" method="POST">
+			<table class="table table-dark table-striped">
+				<thead>
+					<tr>
+						<th>Servicio</th>
+						<th>Precio</th>
+						<th>Duración</th>
+						<th></th>
+					</tr>
+				</thead>
 
-					<div class="mb-3">
-						<label class="form-label text-warning fw-bold">Cliente</label>
-						<p class="text-white-50" th:text="${cliente != null ? cliente.nombre : 'Usuario'}">Usuario</p>
-					</div>
+				<tbody>
+					<tr th:each="s : ${productos}">
+						<td th:text="${s.nombre}">Nombre</td>
+						<td th:text="${s.precio + ' €'}">0</td>
+						<td th:text="${s.duracion != null ? s.duracion.toMinutes() + ' min' : '-'}">0 min</td>
 
-					<div class="mb-3">
-						<label class="form-label text-warning fw-bold">Fecha y Hora</label>
-						<input name="fechaHora" type="datetime-local"
-							class="form-control border-warning bg-white text-dark" required>
-					</div>
-
-					<div class="mb-3">
-						<label class="form-label text-warning fw-bold">Observaciones</label>
-						<textarea class="form-control border-warning bg-white text-dark" name="observaciones"
-							rows="3"></textarea>
-					</div>
-
-					<button type="submit" class="btn btn-success w-100">
-						<i class="bi bi-check-circle"></i> Reservar cita
-					</button>
-
-				</form>
-			</div>
-
-			<!-- Servicios -->
-			<div class="col-md-5">
-				<h3 class="text-warning">Servicios disponibles</h3>
-
-				<table class="table table-dark table-striped">
-					<thead>
-						<tr>
-							<th>Servicio</th>
-							<th>Precio</th>
-							<th>Duración</th>
-							<th></th>
-						</tr>
-					</thead>
-
-					<tbody>
-						<tr th:each="s : ${productos}">
-							<td th:text="${s.nombre}">Nombre</td>
-							<td th:text="${s.precio + ' €'}">0</td>
-							<td th:text="${s.duracion != null ? s.duracion.toMinutes() + ' min' : '-'}">0 min</td>
-
-							<td>
-								<a th:href="@{'/inicioUsuario/servicios/' + ${s.id}}" class="btn btn-warning btn-sm">
-									Añadir
-								</a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<!-- Carrito -->
-			<div class="col-md-3">
-
-				<h3 class="text-warning">Tu pedido</h3>
-
-				<ul class="list-group mb-3">
-
-					<li class="list-group-item bg-dark text-white-50" th:if="${#maps.isEmpty(carrito)}">
-						Añade algún servicio
-					</li>
-
-					<li class="list-group-item bg-dark text-warning" th:each="entry : ${carrito}">
-						<div class="d-flex justify-content-between">
-							<span>
-								<strong class="pe-4" th:text="${entry.key.nombre}">Nombre</strong>
-								<span th:text="${entry.key.precio}">0</span> €
-							</span>
-
-							<a th:href="@{'/carrito/borrar/' + ${entry.key.id}}" class="btn btn-sm btn-outline-danger">
-								<i class="bi bi-trash"></i>
+						<td>
+							<a th:href="@{'/inicioUsuario/servicios/' + ${s.id}}" class="btn btn-warning btn-sm">
+								Añadir
 							</a>
-						</div>
-					</li>
-				</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-				<div class="pb-5">
-					<h5 class="text-warning">
-						Total: <span th:text="${#numbers.formatCurrency(total_carrito)}"></span>
-					</h5>
+		<!-- Carrito -->
+		<div class="col-md-3">
 
-					<a href="/carrito/vaciar" class="btn btn-danger mt-3 w-100">
-						<i class="bi bi-trash"></i> Vaciar carrito
-					</a>
-				</div>
+			<h3 class="text-warning">Tu pedido</h3>
 
+			<ul class="list-group mb-3">
+
+				<li class="list-group-item bg-dark text-white-50" th:if="${#maps.isEmpty(carrito)}">
+					Añade algún servicio
+				</li>
+
+				<li class="list-group-item bg-dark text-warning" th:each="entry : ${carrito}">
+					<div class="d-flex justify-content-between">
+						<span>
+							<strong class="pe-4" th:text="${entry.key.nombre}">Nombre</strong>
+							<span th:text="${entry.key.precio}">0</span> €
+						</span>
+
+						<a th:href="@{'/carrito/borrar/' + ${entry.key.id}}" class="btn btn-sm btn-outline-danger">
+							<i class="bi bi-trash"></i>
+						</a>
+					</div>
+				</li>
+			</ul>
+
+			<div class="pb-5">
+				<h5 class="text-warning">
+					Total: <span th:text="${#numbers.formatCurrency(total_carrito)}"></span>
+				</h5>
+
+				<a href="/carrito/vaciar" class="btn btn-danger mt-3 w-100">
+					<i class="bi bi-trash"></i> Vaciar carrito
+				</a>
 			</div>
 
 		</div>
+
+	</div>
 	</div>
 
 	<footer th:replace="~{fragments/pie :: pie}"></footer>
