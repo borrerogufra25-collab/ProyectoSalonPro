@@ -71,7 +71,7 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 	public void registrarCita(Cita cita, Long clienteId, Map<Servicio, Integer> servicios, String observaciones) {
 
 		Cliente cliente;
-		double total;
+		double precioFinal, precioBase;
 		List<CitaServicio> detalles = new ArrayList<>();
 
 		if (servicios == null || servicios.isEmpty()) {
@@ -84,13 +84,15 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		cita.setCliente(cliente);
 
 		// Calculeo
-		total = servicios.entrySet()
+		precioBase = servicios.entrySet()
 				.stream()
 				.mapToDouble(entry -> entry.getKey()
 						.getPrecio() * entry.getValue())
 				.sum();
 
-		cita.setPrecioTotal(total);
+		precioFinal = clienteServicio.aplicarDescuentoCumple(cliente, precioBase);
+
+		cita.setPrecioTotal(precioFinal);
 
 		// Crearlo
 		servicios.forEach((servicio, cantidad) -> {
@@ -109,6 +111,8 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		}
 
 		this.save(cita);
+
+		clienteServicio.aumentarPelados(cliente);
 	}
 
 }

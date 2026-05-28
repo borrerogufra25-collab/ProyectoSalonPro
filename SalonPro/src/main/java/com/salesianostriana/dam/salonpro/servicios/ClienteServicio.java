@@ -33,4 +33,16 @@ public class ClienteServicio extends BaseServiciosImpl<Cliente, Long, ClienteRep
 		return cumple.getMonth() == hoy.getMonth() && cumple.getDayOfMonth() == hoy.getDayOfMonth();
 	}
 
+	public double aplicarDescuentoCumple(Cliente cliente, double precioBase) {
+		if (esCumple(cliente)) {
+			return precioBase - (precioBase * 10 / 100);
+		}
+		return precioBase;
+	}
+
+	public void aumentarPelados(Cliente cliente) {
+		cliente.setNumCortes(cliente.getNumCortes() + 1);
+		save(cliente);
+	}
+
 }
