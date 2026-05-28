@@ -23,7 +23,7 @@ public class PrincipalControlador {
 
 	@GetMapping("/inicioUsuario")
 	public String inicioUsuario(Authentication auth, Model model) {
-		String emailUsuario = auth.getName();
+		String email = auth.getName();
 		return "inicioUsuario";
 	}
 

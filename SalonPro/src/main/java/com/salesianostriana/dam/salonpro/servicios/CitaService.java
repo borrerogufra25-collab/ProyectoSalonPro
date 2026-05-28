@@ -3,6 +3,9 @@ package com.salesianostriana.dam.salonpro.servicios;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 
@@ -21,16 +24,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> {
 
-	private final ServiciosServicio serviciosServicio;
 	private final ClienteServicio clienteServicio;
+
+	public List<Cita> listarCitasDeCliente(Long clienteId) {
+		return repository.findByClienteId(clienteId);
+	}
 
 	private boolean seSolapan(LocalDateTime inicioA, LocalDateTime finA, LocalDateTime inicioB, LocalDateTime finB) {
 		return inicioA.isBefore(finB) && finA.isAfter(inicioB);
 	}
 
-	public boolean tieneConflictoHorario(LocalDateTime inicioNuevaCita, List<Servicio> servicios) {
+	private List<Servicio> expandServicios(Map<Servicio, Integer> servicios) {
+		return servicios.entrySet()
+				.stream()
+				.flatMap(entry -> IntStream.range(0, entry.getValue())
+						.mapToObj(i -> entry.getKey()))
+				.collect(Collectors.toList());
+	}
 
-		long minutosTotales = servicios.stream()
+	public boolean tieneConflictoHorario(LocalDateTime inicioNuevaCita, Map<Servicio, Integer> servicios) {
+
+		long minutosTotales = expandServicios(servicios).stream()
 				.mapToLong(s -> s.getDuracion()
 						.toMinutes())
 				.sum();
@@ -54,24 +68,43 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 				});
 	}
 
-	public void registrarCita(Cita cita, Long clienteId, Long servicioId, String observaciones) {
+	public void registrarCita(Cita cita, Long clienteId, Map<Servicio, Integer> servicios, String observaciones) {
 
-		Servicio servicio = serviciosServicio.findById(servicioId)
-				.orElseThrow(() -> new EntityNotFoundException("Servicio no encontrado"));
-		Cliente cliente = clienteServicio.findById(clienteId)
+		Cliente cliente;
+		double total;
+		List<CitaServicio> detalles = new ArrayList<>();
+
+		if (servicios == null || servicios.isEmpty()) {
+			throw new IllegalArgumentException("No se han seleccionado servicios para la cita");
+		}
+
+		cliente = clienteServicio.findById(clienteId)
 				.orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
 
 		cita.setCliente(cliente);
-		cita.setPrecioTotal(servicio.getPrecio());
 
-		CitaServicio detalle = CitaServicio.builder()
-				.cita(cita)
-				.servicio(servicio)
-				.observaciones(observaciones)
-				.build();
-		cita.setCitaServicios(new ArrayList<>(List.of(detalle)));
+		// Calculeo
+		total = servicios.entrySet()
+				.stream()
+				.mapToDouble(entry -> entry.getKey()
+						.getPrecio() * entry.getValue())
+				.sum();
 
-		if (this.tieneConflictoHorario(cita.getFecha(), List.of(servicio))) {
+		cita.setPrecioTotal(total);
+
+		// Crearlo
+		servicios.forEach((servicio, cantidad) -> {
+			IntStream.range(0, cantidad)
+					.forEach(i -> detalles.add(CitaServicio.builder()
+							.cita(cita)
+							.servicio(servicio)
+							.observaciones(observaciones)
+							.build()));
+		});
+
+		cita.setCitaServicios(detalles);
+
+		if (this.tieneConflictoHorario(cita.getFecha(), servicios)) {
 			throw new ConflictoFechaException(cita);
 		}
 

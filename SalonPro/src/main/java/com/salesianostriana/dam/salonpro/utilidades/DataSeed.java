@@ -93,7 +93,7 @@ public class DataSeed {
 
 		clienteRepositorio.saveAll(clientesOriginales);
 
-		// Para probar
+		// Para probar roles
 
 		Cliente usuarioPrueba = Cliente.builder()
 				.nombre("Usuario de Prueba")
@@ -132,6 +132,67 @@ public class DataSeed {
 						.nombre("Tinte Completo")
 						.precio(35.00)
 						.duracion(Duration.ofMinutes(60))
+						.build(),
+
+				Servicio.builder()
+						.nombre("Peinado niña pequeña (de 0 a 10 años)")
+						.precio(22.00)
+						.duracion(Duration.ofMinutes(30))
+						.build(),
+
+				Servicio.builder()
+						.nombre("Matiz + difuminado")
+						.precio(48.00)
+						.duracion(Duration.ofMinutes(30))
+						.build(),
+
+				Servicio.builder()
+						.nombre("No-breaker aplicación")
+						.precio(8.99)
+						.duracion(Duration.ofMinutes(5))
+						.build(),
+
+				Servicio.builder()
+						.nombre("Secado express")
+						.precio(20.00)
+						.duracion(Duration.ofMinutes(20))
+						.build(),
+
+				Servicio.builder()
+						.nombre("Lavado")
+						.precio(0.0)
+						.duracion(Duration.ofMinutes(20))
+						.build(),
+
+				Servicio.builder()
+						.nombre("Tratamiento Reconstructor No-Breaker")
+						.precio(40.00)
+						.duracion(Duration.ofMinutes(30))
+						.build(),
+
+				Servicio.builder()
+						.nombre("Diseño de cejas")
+						.precio(13.00)
+						.duracion(Duration.ofMinutes(15))
+						.build(),
+
+				Servicio.builder()
+						.nombre("Laminado de cejas")
+						.precio(25.00)
+						.duracion(Duration.ofMinutes(40))
+						.build(),
+
+				Servicio.builder()
+						.nombre("Manicura Princess (hasta 12 años)")
+						.precio(14.00)
+						.duracion(Duration.ofMinutes(30))
+						.build(),
+
+				Servicio.builder()
+						.nombre("Prueba de peinado novia")
+						.precio(85.00)
+						.duracion(Duration.ofHours(1)
+								.plusMinutes(15))
 						.build());
 
 		List<Servicio> serviciosGuardados = servicioRepositorio.saveAll(listaServicios);
@@ -139,7 +200,8 @@ public class DataSeed {
 		// Citas
 
 		Cita cita1 = Cita.builder()
-				.fecha(LocalDateTime.now())
+				.fecha(LocalDateTime.now()
+						.plusHours(3))
 				.cliente(usuarioPrueba)
 				.precioTotal(serviciosGuardados.get(0)
 						.getPrecio())
@@ -156,8 +218,7 @@ public class DataSeed {
 
 		Cita cita2 = Cita.builder()
 				.fecha(LocalDateTime.now()
-						.withHour(17)
-						.withMinute(30))
+						.plusHours(5))
 				.cliente(clientesOriginales.get(0))
 				.precioTotal(serviciosGuardados.get(1)
 						.getPrecio()
