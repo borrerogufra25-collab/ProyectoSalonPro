@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
+import com.salesianostriana.dam.salonpro.modelo.UserRole;
 import com.salesianostriana.dam.salonpro.repositorios.ClienteRepositorio;
 import com.salesianostriana.dam.salonpro.serviciosBase.BaseServiciosImpl;
 

@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Crear Cliente</title>
+	<title>Nuevo Cliente</title>
 
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -16,7 +16,7 @@
 
 <body class="bg-dark text-white">
 
-	<header th:replace="~{fragments/cabeceraAdmin :: cabeceraAdmin}"></header>
+	<header th:replace="~{fragments/cabecera :: cabecera}"></header>
 
 	<main class="container py-5">
 
@@ -24,15 +24,11 @@
 			Nuevo Cliente
 		</h2>
 
-		<form method="POST" th:object="${nuevoCliente}"
-			th:action="*{id} != 0 ?  @{/inicioAdmin/clientes/editar/submit} : @{/inicioAdmin/clientes/nuevo/submit}"
+		<form method="POST" th:object="${nuevoCliente}" th:action="@{/nuevoCliente/submit}"
 			class="bg-dark p-4 border border-warning rounded">
 
-			<div class="mb-3">
-				<label class="form-label text-warning fw-bold" for="id">ID</label>
-				<input th:if="*{id != 0}" type="hidden" class="form-control border-warning" name="id" th:field="*{id}"
-					required>
-			</div>
+			<input th:if="*{id != 0}" type="hidden" class="form-control border-warning" name="id" th:field="*{id}"
+				required>
 
 			<div class="mb-3">
 				<label class="form-label text-warning fw-bold" for="nombre">Nombre</label>
@@ -63,8 +59,10 @@
 				<input type="password" class="form-control border-warning" name="contrasenia" th:field="*{contrasenia}">
 			</div>
 
+			<input type="hidden" name="rol" th:field="*{role}" required>
+
 			<div class="d-flex justify-content-between mt-4">
-				<a th:href="@{/inicioAdmin/clientes}" class="btn btn-outline-warning">
+				<a th:href="@{/}" class="btn btn-outline-warning">
 					<i class="bi bi-arrow-left"></i> Volver
 				</a>
 
@@ -74,6 +72,8 @@
 			</div>
 
 		</form>
+
+		<footer th:replace="~{fragments/pie :: pie}"></footer>
 
 	</main>
 
