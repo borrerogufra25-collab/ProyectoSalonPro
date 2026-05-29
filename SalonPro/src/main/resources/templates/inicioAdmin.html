@@ -24,49 +24,6 @@
 		<p class="mb-5">Bienvenido al área de gestión. Selecciona una sección para administrar los datos del sistema.
 		</p>
 
-		<!-- Consulta citas -->
-
-		<section class="mt-5">
-			<div class="d-flex justify-content-between align-items-center mb-3">
-				<h2 class="h4 text-warning mb-0">Próximas citas</h2>
-				<a class="btn btn-outline-warning btn-sm" th:href="@{/inicioAdmin/citas}">
-					Ver todas
-				</a>
-			</div>
-
-			<div class="table-responsive">
-				<table class="table table-dark table-striped table-hover align-middle">
-					<thead class="table-dark">
-						<tr class="text-warning">
-							<th>Fecha y hora</th>
-							<th>Cliente</th>
-							<th>Servicios</th>
-							<th>Precio total</th>
-						</tr>
-					</thead>
-
-					<tbody>
-						<tr th:each="c : ${citasProximas}">
-							<td th:text="${#temporals.format(c.fecha, 'dd/MM/yyyy HH:mm')}">-</td>
-							<td th:text="${c.cliente != null ? c.cliente.nombre : '-'}">-</td>
-							<td>
-								<ul class="mb-0 ps-3">
-									<li th:each="cs : ${c.citaServicios}" th:text="${cs.servicio.nombre}">Servicio</li>
-								</ul>
-							</td>
-							<td th:text="${c.precioTotal} + ' €'">-</td>
-						</tr>
-
-						<tr th:if="${citasProximas == null or citasProximas.isEmpty()}">
-							<td colspan="4" class="text-center text-white-50 py-4">
-								No hay citas próximas.
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</section>
-
 		<div class="row g-4">
 
 			<!-- Clientes -->
@@ -123,7 +80,48 @@
 
 		</div>
 
+		<!-- Consulta citas -->
 
+		<section class="mt-5">
+			<div class="d-flex justify-content-between align-items-center mb-3">
+				<h2 class="h4 text-warning mb-0">Próximas citas</h2>
+				<a class="btn btn-outline-warning btn-sm" th:href="@{/inicioAdmin/citas}">
+					Ver todas
+				</a>
+			</div>
+
+			<div class="table-responsive">
+				<table class="table table-dark table-striped table-hover align-middle">
+					<thead class="table-dark">
+						<tr class="text-warning">
+							<th>Fecha y hora</th>
+							<th>Cliente</th>
+							<th>Servicios</th>
+							<th>Precio total</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="c : ${citasProximas}">
+							<td th:text="${#temporals.format(c.fecha, 'dd/MM/yyyy HH:mm')}">-</td>
+							<td th:text="${c.cliente != null ? c.cliente.nombre : '-'}">-</td>
+							<td>
+								<ul class="mb-0 ps-3">
+									<li th:each="cs : ${c.citaServicios}" th:text="${cs.servicio.nombre}">Servicio</li>
+								</ul>
+							</td>
+							<td th:text="${c.precioTotal} + ' €'">-</td>
+						</tr>
+
+						<tr th:if="${citasProximas == null or citasProximas.isEmpty()}">
+							<td colspan="4" class="text-center text-white-50 py-4">
+								No hay citas próximas.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
 
 	</main>
 
