@@ -97,7 +97,7 @@ public class DataSeed {
 
 		Cliente usuarioPrueba = Cliente.builder()
 				.nombre("Usuario de Prueba")
-				.telefono("111222333")
+				.telefono("999999999")
 				.email("user@user.com")
 				.contrasenia(passwordEncoder.encode("user"))
 				.role(UserRole.USER)
@@ -105,7 +105,7 @@ public class DataSeed {
 
 		Cliente adminPrueba = Cliente.builder()
 				.nombre("Administrador")
-				.telefono("999888777")
+				.telefono("999999999")
 				.email("admin@admin.com")
 				.contrasenia(passwordEncoder.encode("admin"))
 				.role(UserRole.ADMIN)
@@ -201,7 +201,7 @@ public class DataSeed {
 
 		Cita cita1 = Cita.builder()
 				.fecha(LocalDateTime.now()
-						.plusHours(3))
+						.plusHours(2))
 				.cliente(usuarioPrueba)
 				.precioTotal(serviciosGuardados.get(0)
 						.getPrecio())
@@ -213,7 +213,6 @@ public class DataSeed {
 				.observaciones("Quiere un mohicano inverso")
 				.build();
 
-		// Añadir el servicio a la cita
 		cita1.setCitaServicios(List.of(cs1));
 
 		Cita cita2 = Cita.builder()

@@ -20,52 +20,65 @@
 	<header th:replace="~{fragments/cabeceraAdmin :: cabeceraAdmin}"></header>
 
 	<main class="container py-5">
-		<h2 class="text-warning mb-4">
-			Nuevo Servicio
-		</h2>
 
-		<form method="POST" th:object="${nuevoServicio}"
-			th:action="*{id} != null and *{id} != 0 ? @{/inicioAdmin/servicios/editar/submit} : @{/inicioAdmin/servicios/nuevo/submit}"
-			class="bg-dark p-4 border border-warning rounded">
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-8 col-lg-6">
 
-			<input type="hidden" th:field="*{id}">
+				<h2 class="text-warning mb-4">
+					Nuevo Servicio
+				</h2>
 
-			<div class="mb-3">
-				<label class="form-label text-warning fw-bold" for="nombre">Nombre del Servicio</label>
-				<input type="text" class="form-control border-warning bg-white" name="nombre" th:field="*{nombre}"
-					required>
-				<small class="text-white">Ej: Corte de pelo Caballero, Tinte, Lavado, etc.</small>
+				<form method="POST" th:object="${nuevoServicio}"
+					th:action="*{id} != null and *{id} != 0 ? @{/inicioAdmin/servicios/editar/submit} : @{/inicioAdmin/servicios/nuevo/submit}"
+					class="bg-dark p-4 border border-warning rounded">
+
+					<input th:if="*{id != null}" type="hidden" th:field="*{id}">
+
+					<div class="mb-3">
+						<label class="form-label text-warning fw-bold" for="nombre">Nombre del Servicio</label>
+						<input type="text" th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid' : ''"
+							class="form-control border-warning bg-white text-dark" th:field="*{nombre}" required>
+						<div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
+						</div>
+						<small class="text-white" th:if="${!#fields.hasErrors('nombre')}">Ej: Corte de pelo Caballero,
+							Tinte, Lavado, etc.</small>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label text-warning fw-bold" for="precio">Precio (€)</label>
+						<input type="number" step="0.01"
+							th:classappend="${#fields.hasErrors('precio')} ? 'is-invalid' : ''"
+							class="form-control border-warning bg-white text-dark" th:field="*{precio}" required>
+						<div class="invalid-feedback" th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}">
+						</div>
+						<small class="text-white" th:if="${!#fields.hasErrors('precio')}">Introduce el coste del
+							servicio. Ej: 14.50</small>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label text-warning fw-bold" for="duracion">Duración (minutos)</label>
+						<input type="number" th:classappend="${#fields.hasErrors('duracion')} ? 'is-invalid' : ''"
+							class="form-control border-warning bg-white text-dark" th:field="*{duracion}" required>
+						<div class="invalid-feedback" th:if="${#fields.hasErrors('duracion')}" th:errors="*{duracion}">
+						</div>
+						<small class="text-white" th:if="${!#fields.hasErrors('duracion')}">Tiempo estimado de ejecución
+							en minutos. Ej: 30</small>
+					</div>
+
+					<div class="d-flex justify-content-between mt-4">
+						<a th:href="@{/inicioAdmin/servicios}" class="btn btn-outline-warning">
+							<i class="bi bi-arrow-left"></i> Volver
+						</a>
+
+						<button type="submit" class="btn btn-warning text-black fw-bold">
+							<i class="bi bi-check-circle"></i> Guardar
+						</button>
+					</div>
+
+				</form>
+
 			</div>
-
-			<div class="mb-3">
-				<label class="form-label text-warning fw-bold" for="precio">Precio (€)</label>
-				<input type="number" step="0.01" min="0" class="form-control border-warning bg-white" name="precio"
-					th:field="*{precio}" required>
-				<small class="text-white">Introduce el coste del servicio. Ej: 14.50</small>
-			</div>
-
-			<div class="mb-3">
-				<label class="form-label text-warning fw-bold" for="duracion">Duración (minutos)</label>
-				<input type="number" min="1" class="form-control border-warning bg-white" name="duracion"
-					th:field="*{duracion}" required>
-				<small class="text-white">Tiempo estimado de ejecución en minutos. Ej: 30</small>
-			</div>
-
-			<!-- <div>
-                MIRAR COMO SE METEN FOTOS
-            </div> -->
-
-			<div class="d-flex justify-content-between mt-4">
-				<a th:href="@{/inicioAdmin/servicios}" class="btn btn-outline-warning">
-					<i class="bi bi-arrow-left"></i> Volver
-				</a>
-
-				<button type="submit" class="btn btn-warning text-black fw-bold">
-					<i class="bi bi-check-circle"></i> Guardar
-				</button>
-			</div>
-
-		</form>
+		</div>
 
 	</main>
 
