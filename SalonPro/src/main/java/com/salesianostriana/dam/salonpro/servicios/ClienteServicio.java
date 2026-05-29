@@ -42,13 +42,18 @@ public class ClienteServicio extends BaseServiciosImpl<Cliente, Long, ClienteRep
 		save(cliente);
 	}
 
-	// TODO
-	public double aplicarDescuentoCumple(Cliente cliente, double precioBase, double descuento) {
+	public double aplicarDescuentoCumple(Cliente cliente, double precioBase) {
+		double descuento, precioConDescuento;
 
-		if (esCumple(cliente)) {
-			return precioBase - (precioBase);
+		if (!esCumple(cliente)) {
+			return precioBase;
 		}
-		return precioBase;
+
+		descuento = datosMaestroServicio.obtenerConfiguracion()
+				.getDescuentoCumple();
+		precioConDescuento = precioBase * (1 - descuento / 100);
+
+		return Math.max(0, Math.round(precioConDescuento * 100.0) / 100.0);
 	}
 
 }
