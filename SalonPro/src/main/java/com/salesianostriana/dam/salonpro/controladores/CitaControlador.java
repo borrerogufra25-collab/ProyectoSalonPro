@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.salonpro.controladores;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -66,11 +67,15 @@ public class CitaControlador {
 	}
 
 	@PostMapping("/inicioAdmin/citas/nueva/submit")
-	public String submitNueva(@ModelAttribute("cita") Cita cita,
-			@RequestParam("servicioId") Map<Servicio, Integer> servicioId, @RequestParam("clienteId") Long clienteId,
-			@RequestParam("observaciones") String observaciones) {
+	public String submitNueva(@ModelAttribute("cita") Cita cita, @RequestParam("servicioId") Long servicioId,
+			@RequestParam("clienteId") Long clienteId, @RequestParam("observaciones") String observaciones) {
 		try {
-			citaService.registrarCita(cita, clienteId, servicioId, observaciones);
+			Servicio servicio = serviciosServicio.findById(servicioId)
+					.orElseThrow(() -> new NoSuchElementException("Servicio no encontrado"));
+			Map<Servicio, Integer> servicios = new HashMap<>();
+			servicios.put(servicio, 1);
+
+			citaService.registrarCita(cita, clienteId, servicios, observaciones);
 			return "redirect:/inicioAdmin/citas";
 		} catch (ConflictoFechaException e) {
 			return "redirect:/inicioAdmin/citas/nueva?error=conflicto";

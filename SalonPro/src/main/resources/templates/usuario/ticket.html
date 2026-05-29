@@ -16,7 +16,7 @@
 
 	<header th:replace="~{fragments/cabeceraUsuario :: cabeceraUsuario}"></header>
 
-	<div class="container d-flex justify-content-center align-items-center p-5">
+	<div class="container py-5">
 		<div class="row justify-content-center">
 			<div class="col-md-8">
 				<div class="card bg-dark border-warning text-white">
@@ -24,22 +24,42 @@
 						<h3 class="mb-0">Reserva confirmada</h3>
 					</div>
 					<div class="card-body">
-						<p class="lead">Gracias, <strong
-								th:text="${cliente != null ? cliente.nombre : 'usuario'}">Usuario</strong>.</p>
+						<p class="lead">
+							Gracias,
+							<strong th:text="${cliente != null ? cliente.nombre : 'usuario'}">Usuario</strong>.
+						</p>
 						<p>Tu cita ha sido registrada correctamente.</p>
 
-						<dl class="row">
-							<dt class="col-sm-4">Fecha y hora</dt>
-							<dd class="col-sm-8" th:text="${#temporals.format(fecha, 'dd/MM/yyyy HH:mm')}">-</dd>
+						<div class="mb-4">
+							<div class="row mb-2">
+								<div class="col-sm-4 fw-bold">Fecha y hora</div>
+								<div class="col-sm-8" th:text="${#temporals.format(fecha, 'dd/MM/yyyy HH:mm')}">-</div>
+							</div>
 
-							<dt class="col-sm-4">Total</dt>
-							<dd class="col-sm-8" th:text="${#numbers.formatCurrency(total)}">0 €</dd>
+							<div class="row mb-2" th:if="${descuentoAplicado != null and descuentoAplicado > 0}">
+								<div class="col-sm-4 fw-bold">Subtotal</div>
+								<div class="col-sm-8" th:text="${#numbers.formatCurrency(totalBase)}">0 €</div>
+							</div>
 
-							<dt class="col-sm-4">Observaciones</dt>
-							<dd class="col-sm-8"
-								th:text="${observaciones != null && observaciones.trim().length() > 0 ? observaciones : 'Sin observaciones'}">
-								Sin observaciones</dd>
-						</dl>
+							<div class="row mb-2" th:if="${descuentoAplicado != null and descuentoAplicado > 0}">
+								<div class="col-sm-4 fw-bold">Descuento cumpleaños</div>
+								<div class="col-sm-8 text-success"
+									th:text="'-' + ${#numbers.formatCurrency(descuentoAplicado)}">0 €</div>
+							</div>
+
+							<div class="row mb-2">
+								<div class="col-sm-4 fw-bold">Total</div>
+								<div class="col-sm-8" th:text="${#numbers.formatCurrency(total)}">0 €</div>
+							</div>
+
+							<div class="row mb-2">
+								<div class="col-sm-4 fw-bold">Observaciones</div>
+								<div class="col-sm-8"
+									th:text="${observaciones != null && observaciones.trim().length() > 0 ? observaciones : 'Sin observaciones'}">
+									Sin observaciones
+								</div>
+							</div>
+						</div>
 
 						<h5 class="text-warning">Servicios reservados</h5>
 						<ul class="list-group mb-3">

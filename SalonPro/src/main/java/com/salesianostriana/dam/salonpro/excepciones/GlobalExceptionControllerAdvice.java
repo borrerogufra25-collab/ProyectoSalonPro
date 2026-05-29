@@ -7,21 +7,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.salesianostriana.dam.salonpro.modelo.Cita;
-import com.salesianostriana.dam.salonpro.servicios.CitaService;
 import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
 import com.salesianostriana.dam.salonpro.servicios.ServiciosServicio;
 
 @ControllerAdvice
 public class GlobalExceptionControllerAdvice {
 
-	private final CitaService citaService;
 	private final ClienteServicio clienteServicio;
 	private final ServiciosServicio serviciosServicio;
 
-	public GlobalExceptionControllerAdvice(CitaService citaService, ClienteServicio clienteServicio,
-			ServiciosServicio serviciosServicio) {
+	public GlobalExceptionControllerAdvice(ClienteServicio clienteServicio, ServiciosServicio serviciosServicio) {
 		super();
-		this.citaService = citaService;
 		this.clienteServicio = clienteServicio;
 		this.serviciosServicio = serviciosServicio;
 	}
@@ -41,6 +37,5 @@ public class GlobalExceptionControllerAdvice {
 		return "citas/formularioCita";
 
 	}
-
 
 }

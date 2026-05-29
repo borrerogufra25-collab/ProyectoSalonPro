@@ -3,8 +3,8 @@ package com.salesianostriana.dam.salonpro.modelo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,20 +15,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-public class CitaServicio {
+public class DatosMaestro {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 
-	private String observaciones;
-
-	@ManyToOne
-	@JoinColumn(name = "id_cita")
-	private Cita cita;
-
-	@ManyToOne
-	@JoinColumn(name = "id_servicio")
-	private Servicio servicio;
+	@Min(0)
+	@DecimalMax("100.0")
+	private double descuentoCumple;
 
 }

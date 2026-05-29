@@ -18,10 +18,12 @@ import org.springframework.stereotype.Component;
 import com.salesianostriana.dam.salonpro.modelo.Cita;
 import com.salesianostriana.dam.salonpro.modelo.CitaServicio;
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
+import com.salesianostriana.dam.salonpro.modelo.DatosMaestro;
 import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.modelo.UserRole;
 import com.salesianostriana.dam.salonpro.repositorios.CitaRepositorio;
 import com.salesianostriana.dam.salonpro.repositorios.ClienteRepositorio;
+import com.salesianostriana.dam.salonpro.repositorios.DatosMaestroRepositorio;
 import com.salesianostriana.dam.salonpro.repositorios.ServicioRepositorio;
 
 import jakarta.annotation.PostConstruct;
@@ -34,10 +36,17 @@ public class DataSeed {
 	private final ClienteRepositorio clienteRepositorio;
 	private final ServicioRepositorio servicioRepositorio;
 	private final CitaRepositorio citaRepositorio;
+	private final DatosMaestroRepositorio datosMaestroRepositorio;
 	private final PasswordEncoder passwordEncoder;
 
 	@PostConstruct
 	public void run() {
+
+		if (datosMaestroRepositorio.count() == 0) {
+			datosMaestroRepositorio.save(DatosMaestro.builder()
+					.descuentoCumple(10.0)
+					.build());
+		}
 
 		// Clientes
 
@@ -49,6 +58,7 @@ public class DataSeed {
 				.contrasenia(passwordEncoder.encode("user"))
 				.role(UserRole.USER)
 				.cumple(LocalDate.of(1998, 5, 11))
+				.numCortes(1)
 				.build(),
 
 				Cliente.builder()
@@ -101,6 +111,8 @@ public class DataSeed {
 				.email("user@user.com")
 				.contrasenia(passwordEncoder.encode("user"))
 				.role(UserRole.USER)
+				.numCortes(1)
+				.cumple(LocalDate.now())
 				.build();
 
 		Cliente adminPrueba = Cliente.builder()

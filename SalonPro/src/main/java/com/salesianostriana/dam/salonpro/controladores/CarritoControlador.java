@@ -92,6 +92,11 @@ public class CarritoControlador {
 
 	// Tramitar
 
+	@GetMapping("/carrito/tramitar")
+	public String mostrarTicket() {
+		return "redirect:/inicioUsuario/servicios";
+	}
+
 	@PostMapping("/carrito/tramitar")
 	public String tramitar(
 			@RequestParam("fechaHora") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaHora,
@@ -111,9 +116,9 @@ public class CarritoControlador {
 						() -> new NoSuchElementException("Cliente no encontrado con email: " + principal.getName()));
 
 		// Esto para copiar el carrito tal y como está ahora
-		Map<Servicio, Integer> carrito = new HashMap<>(carritoServicio.getProductsInCart());
 
-		double total = carritoServicio.calcularTotal();
+		Map<Servicio, Integer> carrito = new HashMap<>(carritoServicio.getProductsInCart());
+		double totalBase = carritoServicio.calcularTotal();
 
 		Cita cita = new Cita();
 		cita.setFecha(fechaHora);
@@ -128,16 +133,13 @@ public class CarritoControlador {
 
 		model.addAttribute("cliente", cliente);
 		model.addAttribute("carrito", carrito);
-		model.addAttribute("total", total);
+		model.addAttribute("totalBase", totalBase);
+		model.addAttribute("total", cita.getPrecioTotal());
+		model.addAttribute("descuentoAplicado", totalBase - cita.getPrecioTotal());
 		model.addAttribute("fecha", fechaHora);
 		model.addAttribute("observaciones", observaciones);
 
 		return "usuario/ticket";
-	}
-
-	@GetMapping("/carrito/tramitar")
-	public String mostrarTicket() {
-		return "redirect:/inicioUsuario/servicios";
 	}
 
 }
