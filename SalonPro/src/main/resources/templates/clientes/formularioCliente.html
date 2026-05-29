@@ -27,41 +27,53 @@
 				<form method="POST" th:object="${nuevoCliente}" th:action="@{/inicioAdmin/clientes/nuevo/submit}"
 					class="p-4 rounded shadow-lg bg-dark border border-warning">
 
-					<input th:if="*{id != 0}" type="hidden" th:field="*{id}">
+					<input th:if="*{id != null}" type="hidden" th:field="*{id}">
 
 					<div class="mb-3">
 						<label class="form-label text-warning fw-semibold">Nombre *</label>
-						<input type="text" class="form-control bg-white text-dark border-warning" th:field="*{nombre}"
-							required>
-						<small class="opacity-75">Introduce el nombre completo</small>
+						<input type="text" th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid' : ''"
+							class="form-control bg-white text-dark border-warning" th:field="*{nombre}" required>
+						<div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}">
+						</div>
+						<small class="opacity-75" th:if="${!#fields.hasErrors('nombre')}">Introduce el nombre
+							completo</small>
 					</div>
 
 					<div class="mb-3">
 						<label class="form-label text-warning fw-semibold">Email *</label>
-						<input type="email" class="form-control bg-white text-dark border-warning" th:field="*{email}"
-							required>
-						<small class="opacity-75">Ejemplo: usuario@correo.com</small>
+						<input type="email" th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+							class="form-control bg-white text-dark border-warning" th:field="*{email}" required>
+						<div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+						<small class="opacity-75" th:if="${!#fields.hasErrors('email')}">Ejemplo:
+							usuario@correo.com</small>
 					</div>
 
 					<div class="row">
 						<div class="col-12 col-md-6 mb-3">
-							<label class="form-label text-warning fw-semibold">Teléfono</label>
-							<input type="text" class="form-control bg-white text-dark border-warning" pattern="^\d{9}$"
-								th:field="*{telefono}">
-							<small class="opacity-75">Debe tener 9 dígitos</small>
+							<label class="form-label text-warning fw-semibold">Teléfono *</label>
+							<input type="text" th:classappend="${#fields.hasErrors('telefono')} ? 'is-invalid' : ''"
+								class="form-control bg-white text-dark border-warning" th:field="*{telefono}" required>
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('telefono')}">Debe tener
+								exactamente 9 dígitos</div>
+							<small class="opacity-75" th:if="${!#fields.hasErrors('telefono')}">Debe tener 9
+								dígitos</small>
 						</div>
 
 						<div class="col-12 col-md-6 mb-3">
 							<label class="form-label text-warning fw-semibold">Fecha de nacimiento</label>
-							<input type="date" class="form-control bg-white text-dark border-warning"
-								th:field="*{cumple}">
+							<input type="date" th:classappend="${#fields.hasErrors('cumple')} ? 'is-invalid' : ''"
+								class="form-control bg-white text-dark border-warning" th:field="*{cumple}">
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('cumple')}" th:errors="*{cumple}">
+							</div>
 						</div>
 					</div>
 
 					<div class="mb-3">
 						<label class="form-label text-warning fw-semibold">Contraseña *</label>
-						<input type="password" class="form-control bg-white text-dark border-warning"
-							th:field="*{contrasenia}" required>
+						<input type="password" th:classappend="${#fields.hasErrors('contrasenia')} ? 'is-invalid' : ''"
+							class="form-control bg-white text-dark border-warning" th:field="*{contrasenia}" required>
+						<div class="invalid-feedback" th:if="${#fields.hasErrors('contrasenia')}">La contraseña es
+							obligatoria</div>
 					</div>
 
 					<input type="hidden" th:field="*{role}">
