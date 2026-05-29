@@ -9,6 +9,4 @@ import com.salesianostriana.dam.salonpro.serviciosBase.BaseServiciosImpl;
 @Service
 public class ServiciosServicio extends BaseServiciosImpl<Servicio, Long, ServicioRepositorio> {
 
-	private ServicioRepositorio servicioRepo;
-
 }

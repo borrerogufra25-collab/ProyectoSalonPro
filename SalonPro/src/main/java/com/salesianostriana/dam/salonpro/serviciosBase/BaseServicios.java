@@ -3,8 +3,6 @@ package com.salesianostriana.dam.salonpro.serviciosBase;
 import java.util.List;
 import java.util.Optional;
 
-import com.salesianostriana.dam.salonpro.modelo.Cliente;
-
 public interface BaseServicios<T, ID> {
 
 	List<T> findAll();

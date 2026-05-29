@@ -13,7 +13,7 @@
 
 <body class="bg-dark text-white">
 
-	<header th:replace="~{fragments/cabeceraAdmin :: cabeceraAdmin}"></header>
+	<header th:replace="~{fragments/cabecera :: cabecera}"></header>
 
 	<main class="container py-5">
 
@@ -24,7 +24,7 @@
 					Nuevo Cliente
 				</h2>
 
-				<form method="POST" th:object="${nuevoCliente}" th:action="@{/inicioAdmin/clientes/nuevo/submit}"
+				<form method="POST" th:object="${nuevoCliente}" th:action="@{/nuevoCliente/submit}"
 					class="p-4 rounded shadow-lg bg-dark border border-warning">
 
 					<input th:if="*{id != null}" type="hidden" th:field="*{id}">
@@ -79,7 +79,7 @@
 					<input type="hidden" th:field="*{role}">
 
 					<div class="d-flex flex-column flex-sm-row justify-content-between mt-4 gap-3">
-						<a th:href="@{/inicioAdmin/clientes}" class="btn btn-outline-warning px-4">
+						<a th:href="@{/}" class="btn btn-outline-warning px-4">
 							<i class="bi bi-arrow-left"></i> Volver
 						</a>
 

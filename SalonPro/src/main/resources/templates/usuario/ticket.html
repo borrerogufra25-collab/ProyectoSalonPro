@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Resumen de la reserva</title>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="bg-dark text-warning p-4">
+
+	<header th:replace="~{fragments/cabeceraUsuario :: cabeceraUsuario}"></header>
+
+	<div class="container py-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card bg-dark border-warning text-white">
+					<div class="card-header bg-warning text-dark">
+						<h3 class="mb-0">Reserva confirmada</h3>
+					</div>
+					<div class="card-body">
+						<p class="lead">
+							Gracias,
+							<strong th:text="${cliente != null ? cliente.nombre : 'usuario'}">Usuario</strong>.
+						</p>
+						<p>Tu cita ha sido registrada correctamente.</p>
+
+						<div class="mb-4">
+							<div class="row mb-2">
+								<div class="col-sm-4 fw-bold">Fecha y hora</div>
+								<div class="col-sm-8" th:text="${#temporals.format(fecha, 'dd/MM/yyyy HH:mm')}">-</div>
+							</div>
+
+							<div class="row mb-2" th:if="${descuentoAplicado != null and descuentoAplicado > 0}">
+								<div class="col-sm-4 fw-bold">Subtotal</div>
+								<div class="col-sm-8" th:text="${#numbers.formatCurrency(totalBase)}">0 €</div>
+							</div>
+
+							<div class="row mb-2" th:if="${descuentoAplicado != null and descuentoAplicado > 0}">
+								<div class="col-sm-4 fw-bold">Descuento cumpleaños</div>
+								<div class="col-sm-8 text-success"
+									th:text="'-' + ${#numbers.formatCurrency(descuentoAplicado)}">0 €</div>
+							</div>
+
+							<div class="row mb-2">
+								<div class="col-sm-4 fw-bold">Total</div>
+								<div class="col-sm-8" th:text="${#numbers.formatCurrency(total)}">0 €</div>
+							</div>
+
+							<div class="row mb-2">
+								<div class="col-sm-4 fw-bold">Observaciones</div>
+								<div class="col-sm-8"
+									th:text="${observaciones != null && observaciones.trim().length() > 0 ? observaciones : 'Sin observaciones'}">
+									Sin observaciones
+								</div>
+							</div>
+						</div>
+
+						<h5 class="text-warning">Servicios reservados</h5>
+						<ul class="list-group mb-3">
+							<li class="list-group-item bg-dark text-warning" th:each="entry : ${carrito}">
+								<div class="d-flex justify-content-between align-items-center">
+									<div>
+										<span th:text="${entry.key.nombre}">Servicio</span>
+										<span class="text-white-50"
+											th:text="${entry.value > 1 ? ' x' + entry.value : ''}"></span>
+									</div>
+									<span th:text="${entry.key.precio + ' €'}">0 €</span>
+								</div>
+							</li>
+						</ul>
+
+						<a th:href="@{/inicioUsuario}" class="btn btn-warning w-100">Volver al inicio</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="~{fragments/pie :: pie}"></footer>
+
+</body>
+
+</html>

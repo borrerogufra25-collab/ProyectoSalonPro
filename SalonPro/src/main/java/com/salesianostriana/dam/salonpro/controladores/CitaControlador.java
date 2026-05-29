@@ -1,5 +1,10 @@
 package com.salesianostriana.dam.salonpro.controladores;
 
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
@@ -37,6 +42,20 @@ public class CitaControlador {
 		return "citas/listarCitas";
 	}
 
+	@GetMapping("/inicioUsuario/citas")
+	public String listarCitasCliente(Principal principal, Model model) {
+
+		Cliente cliente = clienteServicio.findByEmail(principal.getName())
+				.orElseThrow(() -> new NoSuchElementException("Cliente no encontrado"));
+
+		List<Cita> citas = citaService.listarCitasDeCliente(cliente.getId());
+
+		model.addAttribute("cliente", cliente);
+		model.addAttribute("citas", citas);
+
+		return "usuario/susCitas";
+	}
+
 	// Crear
 
 	@GetMapping("/inicioAdmin/citas/nueva")
@@ -51,7 +70,12 @@ public class CitaControlador {
 	public String submitNueva(@ModelAttribute("cita") Cita cita, @RequestParam("servicioId") Long servicioId,
 			@RequestParam("clienteId") Long clienteId, @RequestParam("observaciones") String observaciones) {
 		try {
-			citaService.registrarCita(cita, clienteId, servicioId, observaciones);
+			Servicio servicio = serviciosServicio.findById(servicioId)
+					.orElseThrow(() -> new NoSuchElementException("Servicio no encontrado"));
+			Map<Servicio, Integer> servicios = new HashMap<>();
+			servicios.put(servicio, 1);
+
+			citaService.registrarCita(cita, clienteId, servicios, observaciones);
 			return "redirect:/inicioAdmin/citas";
 		} catch (ConflictoFechaException e) {
 			return "redirect:/inicioAdmin/citas/nueva?error=conflicto";
