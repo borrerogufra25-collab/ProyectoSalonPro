@@ -30,6 +30,10 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		return repository.findByClienteId(clienteId);
 	}
 
+	public List<Cita> listarCincoCitasMasCercanas() {
+		return repository.findTop5ByFechaGreaterThanEqualOrderByFechaAsc(LocalDateTime.now());
+	}
+
 	private boolean seSolapan(LocalDateTime inicioA, LocalDateTime finA, LocalDateTime inicioB, LocalDateTime finB) {
 		return inicioA.isBefore(finB) && finA.isAfter(inicioB);
 	}
