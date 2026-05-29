@@ -251,6 +251,86 @@ public class DataSeed {
 
 		cita2.setCitaServicios(List.of(cs2, cs3));
 
-		citaRepositorio.saveAll(List.of(cita1, cita2));
+		Cita cita3 = Cita.builder()
+				.fecha(LocalDateTime.now()
+						.plusDays(1)
+						.withHour(10)
+						.withMinute(0))
+				.cliente(clientesOriginales.get(1))
+				.precioTotal(serviciosGuardados.get(3)
+						.getPrecio())
+				.build();
+
+		CitaServicio cs4 = CitaServicio.builder()
+				.cita(cita3)
+				.servicio(serviciosGuardados.get(3))
+				.observaciones("Peinado elegante para reunión importante")
+				.build();
+
+		cita3.setCitaServicios(List.of(cs4));
+
+		Cita cita4 = Cita.builder()
+				.fecha(LocalDateTime.now()
+						.plusDays(2)
+						.withHour(12)
+						.withMinute(30))
+				.cliente(clientesOriginales.get(2))
+				.precioTotal(serviciosGuardados.get(4)
+						.getPrecio()
+						+ serviciosGuardados.get(5)
+								.getPrecio())
+				.build();
+
+		CitaServicio cs5 = CitaServicio.builder()
+				.cita(cita4)
+				.servicio(serviciosGuardados.get(4))
+				.observaciones("Difuminado suave, estilo discreto")
+				.build();
+
+		CitaServicio cs6 = CitaServicio.builder()
+				.cita(cita4)
+				.servicio(serviciosGuardados.get(5))
+				.observaciones("Aplicar No-breaker con cuidado")
+				.build();
+
+		cita4.setCitaServicios(List.of(cs5, cs6));
+
+		Cita cita5 = Cita.builder()
+				.fecha(LocalDateTime.now()
+						.plusDays(3)
+						.withHour(16)
+						.withMinute(0))
+				.cliente(clientesOriginales.get(3))
+				.precioTotal(serviciosGuardados.get(10)
+						.getPrecio())
+				.build();
+
+		CitaServicio cs7 = CitaServicio.builder()
+				.cita(cita5)
+				.servicio(serviciosGuardados.get(10))
+				.observaciones("Quiere cejas muy marcadas, estilo urbano")
+				.build();
+
+		cita5.setCitaServicios(List.of(cs7));
+
+		Cita cita6 = Cita.builder()
+				.fecha(LocalDateTime.now()
+						.plusDays(4)
+						.withHour(18)
+						.withMinute(15))
+				.cliente(clientesOriginales.get(4))
+				.precioTotal(serviciosGuardados.get(12)
+						.getPrecio())
+				.build();
+
+		CitaServicio cs8 = CitaServicio.builder()
+				.cita(cita6)
+				.servicio(serviciosGuardados.get(12))
+				.observaciones("Peinado de prueba para evento legal importante")
+				.build();
+
+		cita6.setCitaServicios(List.of(cs8));
+
+		citaRepositorio.saveAll(List.of(cita1, cita2, cita3, cita4, cita5, cita6));
 	}
 }
