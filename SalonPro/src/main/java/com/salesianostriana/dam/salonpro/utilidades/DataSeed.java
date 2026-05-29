@@ -49,6 +49,7 @@ public class DataSeed {
 				.contrasenia(passwordEncoder.encode("user"))
 				.role(UserRole.USER)
 				.cumple(LocalDate.of(1998, 5, 11))
+				.numCortes(1)
 				.build(),
 
 				Cliente.builder()
@@ -101,6 +102,7 @@ public class DataSeed {
 				.email("user@user.com")
 				.contrasenia(passwordEncoder.encode("user"))
 				.role(UserRole.USER)
+				.numCortes(1)
 				.build();
 
 		Cliente adminPrueba = Cliente.builder()
