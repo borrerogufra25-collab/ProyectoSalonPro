@@ -12,6 +12,4 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class ServiciosServicio extends BaseServiciosImpl<Servicio, Long, ServicioRepositorio> {
 
-	private ServicioRepositorio servicioRepo;
-
 }

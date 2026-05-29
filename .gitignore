@@ -68,3 +68,7 @@ application-local.properties
 # Database
 *.db
 *.sqlite
+SalonPro/db/basedatos.mv.db
+/SalonPro/db
+*.db
+SalonPro/db/basedatos.mv.db

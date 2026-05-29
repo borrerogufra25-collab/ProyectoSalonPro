@@ -19,8 +19,6 @@
 
 	<header th:replace="~{fragments/cabeceraAdmin :: cabeceraAdmin}"></header>
 
-	<hr>
-
 	<main class="container py-4">
 
 		<div class="d-flex justify-content-between align-items-center mb-4">
@@ -37,7 +35,6 @@
 				<thead class="table-dark">
 					<tr class="text-warning">
 						<th>ID</th>
-						<th>Imagen</th>
 						<th>Nombre</th>
 						<th>Precio</th>
 						<th>Duración</th>
@@ -48,12 +45,6 @@
 				<tbody>
 					<tr th:each="s : ${Servicios}">
 						<td th:text="${s.id}">-</td>
-						<td></td>
-						<!-- <td>
-							<i class="bi bi-scissors text-warning fs-4" th:if="${s.imagen == null}"></i>
-							<img th:if="${s.imagen != null}" th:src="@{/images/{img}(img=${s.imagen})}" alt="Servicio"
-								style="width: 40px; height: 40px; object-fit: cover;" class="rounded">
-						</td> -->
 						<td th:text="${s.nombre}">-</td>
 						<td th:text="${s.precio} + ' €'">-</td>
 						<td th:text="${s.duracion != null ? s.duracion.toMinutes() + ' min' : '-'}">-</td>
@@ -102,8 +93,6 @@
 		</div>
 
 	</main>
-
-	<hr>
 
 	<footer th:replace="~{fragments/pie :: pie}"></footer>
 

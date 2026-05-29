@@ -21,14 +21,16 @@
 	<main class="container py-5">
 
 		<h1 class="text-warning mb-4">Área Usuario</h1>
-		<p class="mb-5">Bienvenido Usuario. Puedes gestionar
-			tus citas desde aquí.</p>
+		<p class="mb-5">Bienvenido, <span class="lead"><strong
+					th:text="${cliente != null ? cliente.nombre : 'usuario'}"></strong>.</span> Puedes gestionar
+			tus citas desde aquí.
+		</p>
 
 		<div class="row g-4">
 
 			<!-- Mis Citas -->
 			<div class="col-12 col-md-6">
-				<a href="#" class="text-decoration-none">
+				<a th:href="@{/inicioUsuario/citas}" class="text-decoration-none">
 					<div class="card bg-dark border-warning h-100">
 						<div class="card-body text-center">
 							<i class="bi bi-journal-text text-warning fs-1"></i>
@@ -41,7 +43,7 @@
 
 			<!-- Reservar Cita -->
 			<div class="col-12 col-md-6">
-				<a href="#" class="text-decoration-none">
+				<a th:href="@{/inicioUsuario/servicios}" class="text-decoration-none">
 					<div class="card bg-dark border-warning h-100">
 						<div class="card-body text-center">
 							<i class="bi bi-calendar-plus text-warning fs-1"></i>

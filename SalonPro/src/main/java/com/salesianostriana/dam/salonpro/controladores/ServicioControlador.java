@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.servicios.ServiciosServicio;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -21,7 +23,6 @@ public class ServicioControlador {
 	private final ServiciosServicio servicioServicio;
 
 	// Listar
-
 	@GetMapping("/inicioAdmin/servicios")
 	public String listarServicios(Model model) {
 		model.addAttribute("Servicios", servicioServicio.findAll());
@@ -29,7 +30,6 @@ public class ServicioControlador {
 	}
 
 	// Crear
-
 	@GetMapping("/inicioAdmin/servicios/nuevo")
 	public String nuevoServicio(Model model) {
 		model.addAttribute("nuevoServicio", new Servicio());
@@ -37,13 +37,16 @@ public class ServicioControlador {
 	}
 
 	@PostMapping("/inicioAdmin/servicios/nuevo/submit")
-	public String submitServicio(@ModelAttribute("nuevoServicio") Servicio servicio) {
+	public String submitServicio(@Valid @ModelAttribute("nuevoServicio") Servicio servicio,
+			BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "servicios/formularioServicios";
+		}
 		servicioServicio.save(servicio);
 		return "redirect:/inicioAdmin/servicios";
 	}
 
 	// Editar
-
 	@GetMapping("/inicioAdmin/servicios/editar/{id}")
 	public String formularioEdicion(@PathVariable("id") long id, Model model) {
 		Optional<Servicio> sEditar = servicioServicio.findById(id);
@@ -57,13 +60,16 @@ public class ServicioControlador {
 	}
 
 	@PostMapping("/inicioAdmin/servicios/editar/submit")
-	public String submitFormularioEdicion(@ModelAttribute("nuevoServicio") Servicio s) {
+	public String submitFormularioEdicion(@Valid @ModelAttribute("nuevoServicio") Servicio s,
+			BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return "servicios/formularioServicios";
+		}
 		servicioServicio.edit(s);
 		return "redirect:/inicioAdmin/servicios";
 	}
 
 	// Borrar
-
 	@GetMapping("/inicioAdmin/servicios/borrar/{id}")
 	public String borrar(@PathVariable("id") long id) {
 		Optional<Servicio> sBorrar = servicioServicio.findById(id);

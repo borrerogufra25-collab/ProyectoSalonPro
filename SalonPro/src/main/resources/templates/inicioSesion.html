@@ -37,19 +37,22 @@
 			<form th:action="@{/login}" method="post">
 				<div class="mb-3">
 					<label class="form-label text-warning fw-bold">Usuario</label>
-					<input type="text" name="username"
-						class="form-control bg-white bg-opacity-25 text-white border-warning" required>
+					<input type="text" name="username" class="form-control bg-white text-dark border-warning" required>
 				</div>
 
 				<div class="mb-3">
 					<label class="form-label text-warning fw-bold">Contraseña</label>
-					<input type="password" name="password"
-						class="form-control bg-white bg-opacity-25 text-white border-warning" required>
+					<input type="password" name="password" class="form-control bg-white text-dark border-warning"
+						required>
 				</div>
 
 				<button type="submit" class="btn btn-warning w-100 fw-bold text-black">
 					Entrar
 				</button>
+
+				<a th:href="@{/nuevoCliente}" class="btn btn-secondary w-100 fw-bold text-black mt-3">
+					Nuevo Usuario
+				</a>
 
 			</form>
 

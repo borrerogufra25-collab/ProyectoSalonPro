@@ -65,11 +65,65 @@
 				</a>
 			</div>
 
+			<!-- Configuración -->
+			<div class="col-12 col-md-4">
+				<a th:href="@{/inicioAdmin/configuracion}" class="text-decoration-none">
+					<div class="card bg-dark border-warning h-100">
+						<div class="card-body text-center">
+							<i class="bi bi-sliders text-warning fs-1"></i>
+							<h4 class="text-warning mt-3">Configuración</h4>
+							<p class="text-white-50">Ajusta el descuento de cumpleaños.</p>
+						</div>
+					</div>
+				</a>
+			</div>
+
 		</div>
 
-	</main>
+		<!-- Consulta citas -->
 
-	<!-- Cuando tenga las citas, hacer que se vean las 3 más próximas aquí debajo -->
+		<section class="mt-5">
+			<div class="d-flex justify-content-between align-items-center mb-3">
+				<h2 class="h4 text-warning mb-0">Próximas citas</h2>
+				<a class="btn btn-outline-warning btn-sm" th:href="@{/inicioAdmin/citas}">
+					Ver todas
+				</a>
+			</div>
+
+			<div class="table-responsive">
+				<table class="table table-dark table-striped table-hover align-middle">
+					<thead class="table-dark">
+						<tr class="text-warning">
+							<th>Fecha y hora</th>
+							<th>Cliente</th>
+							<th>Servicios</th>
+							<th>Precio total</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="c : ${citasProximas}">
+							<td th:text="${#temporals.format(c.fecha, 'dd/MM/yyyy HH:mm')}">-</td>
+							<td th:text="${c.cliente != null ? c.cliente.nombre : '-'}">-</td>
+							<td>
+								<ul class="mb-0 ps-3">
+									<li th:each="cs : ${c.citaServicios}" th:text="${cs.servicio.nombre}">Servicio</li>
+								</ul>
+							</td>
+							<td th:text="${c.precioTotal} + ' €'">-</td>
+						</tr>
+
+						<tr th:if="${citasProximas == null or citasProximas.isEmpty()}">
+							<td colspan="4" class="text-center text-white-50 py-4">
+								No hay citas próximas.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+	</main>
 
 </body>
 
