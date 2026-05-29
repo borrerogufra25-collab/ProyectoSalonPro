@@ -90,7 +90,8 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 						.getPrecio() * entry.getValue())
 				.sum();
 
-		precioFinal = clienteServicio.aplicarDescuentoCumple(cliente, precioBase);
+		// TODO: precioFinal = clienteServicio.aplicarDescuentoCumple(cliente,
+		// precioBase);
 
 		cita.setPrecioTotal(precioFinal);
 
