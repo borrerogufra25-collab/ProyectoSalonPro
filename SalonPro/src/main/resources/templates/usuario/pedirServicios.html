@@ -117,6 +117,16 @@
 				</div>
 
 				<div class="mb-3">
+					<label class="form-label text-warning fw-bold">Fidelización</label>
+					<p class="text-white-50 mb-1">
+						Puntos: <span th:text="${cliente != null ? cliente.puntos : 0}">0</span>
+					</p>
+					<p class="text-success mb-0" th:if="${cuponesDisponibles != null and !#lists.isEmpty(cuponesDisponibles)}">
+						Tienes un cupón pendiente para esta reserva.
+					</p>
+				</div>
+
+				<div class="mb-3">
 					<label class="form-label text-warning fw-bold">Fecha y Hora</label>
 					<input name="fechaHora" type="datetime-local" class="form-control border-warning bg-white text-dark"
 						required>

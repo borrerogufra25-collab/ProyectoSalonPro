@@ -42,7 +42,7 @@
 							</div>
 
 							<div class="row mb-2" th:if="${descuentoAplicado != null and descuentoAplicado > 0}">
-								<div class="col-sm-4 fw-bold">Descuento cumpleaños</div>
+								<div class="col-sm-4 fw-bold">Descuentos aplicados</div>
 								<div class="col-sm-8 text-success"
 									th:text="'-' + ${#numbers.formatCurrency(descuentoAplicado)}">0 €</div>
 							</div>

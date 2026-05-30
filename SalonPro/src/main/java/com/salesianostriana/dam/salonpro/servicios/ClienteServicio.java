@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
+import com.salesianostriana.dam.salonpro.modelo.DatosMaestro;
 import com.salesianostriana.dam.salonpro.repositorios.ClienteRepositorio;
 import com.salesianostriana.dam.salonpro.serviciosBase.BaseServiciosImpl;
 
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class ClienteServicio extends BaseServiciosImpl<Cliente, Long, ClienteRepositorio> {
 
 	private final DatosMaestroServicio datosMaestroServicio;
+	private final CuponServicio cuponServicio;
 
 	public Optional<Cliente> findByEmail(String email) {
 		return repository.findByEmail(email);
@@ -38,7 +40,20 @@ public class ClienteServicio extends BaseServiciosImpl<Cliente, Long, ClienteRep
 	}
 
 	public void aumentarPelados(Cliente cliente) {
+
+		DatosMaestro dm = datosMaestroServicio.obtenerConfiguracion();
+
 		cliente.setNumCortes(cliente.getNumCortes() + 1);
+
+		if (cliente.getNumCortes() % dm.getCortesPorPunto() == 0) {
+			cliente.setPuntos(cliente.getPuntos() + 1);
+		}
+
+		if (cliente.getPuntos() >= dm.getPuntosParaCupon()) {
+			cuponServicio.generarCupon(cliente, dm.getDescuentoCupon());
+			cliente.setPuntos(0);
+		}
+
 		save(cliente);
 	}
 
@@ -51,7 +66,7 @@ public class ClienteServicio extends BaseServiciosImpl<Cliente, Long, ClienteRep
 
 		descuento = datosMaestroServicio.obtenerConfiguracion()
 				.getDescuentoCumple();
-		precioConDescuento = precioBase * (1 - descuento / 100);
+		precioConDescuento = precioBase - (precioBase * descuento / 100);
 
 		return Math.max(0, Math.round(precioConDescuento * 100.0) / 100.0);
 	}

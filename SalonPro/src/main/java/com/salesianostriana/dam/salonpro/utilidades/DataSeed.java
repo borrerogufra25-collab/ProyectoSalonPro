@@ -18,11 +18,13 @@ import org.springframework.stereotype.Component;
 import com.salesianostriana.dam.salonpro.modelo.Cita;
 import com.salesianostriana.dam.salonpro.modelo.CitaServicio;
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
+import com.salesianostriana.dam.salonpro.modelo.Cupon;
 import com.salesianostriana.dam.salonpro.modelo.DatosMaestro;
 import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.modelo.UserRole;
 import com.salesianostriana.dam.salonpro.repositorios.CitaRepositorio;
 import com.salesianostriana.dam.salonpro.repositorios.ClienteRepositorio;
+import com.salesianostriana.dam.salonpro.repositorios.CuponRepositorio;
 import com.salesianostriana.dam.salonpro.repositorios.DatosMaestroRepositorio;
 import com.salesianostriana.dam.salonpro.repositorios.ServicioRepositorio;
 
@@ -37,29 +39,37 @@ public class DataSeed {
 	private final ServicioRepositorio servicioRepositorio;
 	private final CitaRepositorio citaRepositorio;
 	private final DatosMaestroRepositorio datosMaestroRepositorio;
+	private final CuponRepositorio cuponRepositorio;
 	private final PasswordEncoder passwordEncoder;
 
 	@PostConstruct
 	public void run() {
 
-		if (datosMaestroRepositorio.count() == 0) {
-			datosMaestroRepositorio.save(DatosMaestro.builder()
-					.descuentoCumple(10.0)
-					.build());
-		}
+		// ============================
+		// 1. DATOS MAESTRO
+		// ============================
+		DatosMaestro dm = datosMaestroRepositorio.findById(1L)
+				.orElseGet(() -> datosMaestroRepositorio.save(DatosMaestro.builder()
+						.descuentoCumple(10.0)
+						.cortesPorPunto(10)
+						.puntosParaCupon(10)
+						.descuentoCupon(15.0)
+						.build()));
 
-		// Clientes
+		// ============================
+		// 2. CLIENTES
+		// ============================
+		List<Cliente> clientesOriginales = List.of(
 
-		List<Cliente> clientesOriginales = List.of(Cliente.builder()
-				.numCortes(3)
-				.nombre("Pepito")
-				.telefono("696322304")
-				.email("futa@pera.com")
-				.contrasenia(passwordEncoder.encode("user"))
-				.role(UserRole.USER)
-				.cumple(LocalDate.of(1998, 5, 11))
-				.numCortes(1)
-				.build(),
+				Cliente.builder()
+						.numCortes(3)
+						.nombre("Pepito")
+						.telefono("696322304")
+						.email("futa@pera.com")
+						.contrasenia(passwordEncoder.encode("user"))
+						.role(UserRole.USER)
+						.cumple(LocalDate.of(1998, 5, 11))
+						.build(),
 
 				Cliente.builder()
 						.numCortes(4)
@@ -101,17 +111,16 @@ public class DataSeed {
 						.cumple(LocalDate.of(1960, 11, 12))
 						.build());
 
-		clienteRepositorio.saveAll(clientesOriginales);
-
-		// Para probar roles
-
+		// ============================
+		// 3. USUARIO Y ADMIN
+		// ============================
 		Cliente usuarioPrueba = Cliente.builder()
 				.nombre("Usuario de Prueba")
 				.telefono("999999999")
 				.email("user@user.com")
 				.contrasenia(passwordEncoder.encode("user"))
 				.role(UserRole.USER)
-				.numCortes(1)
+				.numCortes(100)
 				.cumple(LocalDate.now())
 				.build();
 
@@ -123,8 +132,36 @@ public class DataSeed {
 				.role(UserRole.ADMIN)
 				.build();
 
-		clienteRepositorio.save(usuarioPrueba);
+		// ============================
+		// 4. CALCULAR PUNTOS INICIALES
+		// ============================
+		clientesOriginales.forEach(c -> {
+			int puntos = c.getNumCortes() / dm.getCortesPorPunto();
+			c.setPuntos(puntos);
+		});
+
+		usuarioPrueba.setPuntos(usuarioPrueba.getNumCortes() / dm.getCortesPorPunto());
+
+		// 5. GUARDAR CLIENTES
+		List<Cliente> clientesGuardados = clienteRepositorio.saveAll(clientesOriginales);
+		usuarioPrueba = clienteRepositorio.save(usuarioPrueba); // ← IMPORTANTE
 		clienteRepositorio.save(adminPrueba);
+
+		// 6. GENERAR CUPONES INICIALES
+		if (usuarioPrueba.getPuntos() >= dm.getPuntosParaCupon()) {
+
+			Cupon cupon = Cupon.builder()
+					.cliente(usuarioPrueba) // ← ahora sí tiene ID
+					.descuento(dm.getDescuentoCupon())
+					.usado(false)
+					.fechaCreacion(LocalDateTime.now())
+					.build();
+
+			cuponRepositorio.save(cupon);
+
+			usuarioPrueba.setPuntos(0);
+			clienteRepositorio.save(usuarioPrueba);
+		}
 
 		// Servicios
 
@@ -230,7 +267,7 @@ public class DataSeed {
 		Cita cita2 = Cita.builder()
 				.fecha(LocalDateTime.now()
 						.plusHours(5))
-				.cliente(clientesOriginales.get(0))
+				.cliente(clientesGuardados.get(0))
 				.precioTotal(serviciosGuardados.get(1)
 						.getPrecio()
 						+ serviciosGuardados.get(2)
@@ -256,7 +293,7 @@ public class DataSeed {
 						.plusDays(1)
 						.withHour(10)
 						.withMinute(0))
-				.cliente(clientesOriginales.get(1))
+				.cliente(clientesGuardados.get(1))
 				.precioTotal(serviciosGuardados.get(3)
 						.getPrecio())
 				.build();
@@ -274,7 +311,7 @@ public class DataSeed {
 						.plusDays(2)
 						.withHour(12)
 						.withMinute(30))
-				.cliente(clientesOriginales.get(2))
+				.cliente(clientesGuardados.get(2))
 				.precioTotal(serviciosGuardados.get(4)
 						.getPrecio()
 						+ serviciosGuardados.get(5)
@@ -300,7 +337,7 @@ public class DataSeed {
 						.plusDays(3)
 						.withHour(16)
 						.withMinute(0))
-				.cliente(clientesOriginales.get(3))
+				.cliente(clientesGuardados.get(3))
 				.precioTotal(serviciosGuardados.get(10)
 						.getPrecio())
 				.build();
@@ -318,7 +355,7 @@ public class DataSeed {
 						.plusDays(4)
 						.withHour(18)
 						.withMinute(15))
-				.cliente(clientesOriginales.get(4))
+				.cliente(clientesGuardados.get(4))
 				.precioTotal(serviciosGuardados.get(12)
 						.getPrecio())
 				.build();

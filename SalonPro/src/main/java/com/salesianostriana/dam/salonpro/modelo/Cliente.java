@@ -52,6 +52,9 @@ public class Cliente {
 	@PositiveOrZero
 	private int numCortes;
 
+	@PositiveOrZero
+	private int puntos;
+
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@PastOrPresent(message = "La fecha debe ser anterior o igual a la fecha actual")
 	private LocalDate cumple;
@@ -61,6 +64,9 @@ public class Cliente {
 
 	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Cita> listaCitas;
+
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+	private List<Cupon> cupones;
 
 	public Cliente(String nombre, String email, String telefono, LocalDate cumple) {
 		super();
