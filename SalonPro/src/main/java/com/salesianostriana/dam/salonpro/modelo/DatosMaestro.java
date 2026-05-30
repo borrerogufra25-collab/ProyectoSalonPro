@@ -25,4 +25,14 @@ public class DatosMaestro {
 	@DecimalMax("100.0")
 	private double descuentoCumple;
 
+	@Min(1)
+	private int cortesPorPunto;
+
+	@Min(1)
+	private int puntosParaCupon;
+
+	@Min(0)
+	@DecimalMax("100.0")
+	private double descuentoCupon;
+
 }

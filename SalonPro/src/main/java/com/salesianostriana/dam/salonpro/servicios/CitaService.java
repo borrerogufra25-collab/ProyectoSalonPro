@@ -13,11 +13,13 @@ import com.salesianostriana.dam.salonpro.excepciones.ConflictoFechaException;
 import com.salesianostriana.dam.salonpro.modelo.Cita;
 import com.salesianostriana.dam.salonpro.modelo.CitaServicio;
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
+import com.salesianostriana.dam.salonpro.modelo.Cupon;
 import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.repositorios.CitaRepositorio;
 import com.salesianostriana.dam.salonpro.serviciosBase.BaseServiciosImpl;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> {
 
 	private final ClienteServicio clienteServicio;
+	private final CuponServicio cuponServicio;
 
 	public List<Cita> listarCitasDeCliente(Long clienteId) {
 		return repository.findByClienteId(clienteId);
@@ -72,10 +75,13 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 				});
 	}
 
+	// @Transactional = Garantiza que si falla algo se vuelva atrás y no guarde nada
+	@Transactional
 	public void registrarCita(Cita cita, Long clienteId, Map<Servicio, Integer> servicios, String observaciones) {
 
 		Cliente cliente;
 		double precioFinal, precioBase;
+		Cupon cuponAplicado;
 		List<CitaServicio> detalles = new ArrayList<>();
 
 		if (servicios == null || servicios.isEmpty()) {
@@ -94,7 +100,12 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 						.getPrecio() * entry.getValue())
 				.sum();
 
+		// Los descuentos
 		precioFinal = clienteServicio.aplicarDescuentoCumple(cliente, precioBase);
+
+		cuponAplicado = cuponServicio.buscarCuponDisponible(cliente)
+				.orElse(null);
+		precioFinal = cuponServicio.calcularPrecioConCupon(cuponAplicado, precioFinal);
 
 		cita.setPrecioTotal(precioFinal);
 
@@ -115,6 +126,10 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		}
 
 		this.save(cita);
+
+		if (cuponAplicado != null) {
+			cuponServicio.marcarComoUsado(cuponAplicado, cita);
+		}
 
 		clienteServicio.aumentarPelados(cliente);
 	}

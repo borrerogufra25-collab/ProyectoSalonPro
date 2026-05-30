@@ -22,6 +22,7 @@ import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.servicios.CarritoServicio;
 import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
 import com.salesianostriana.dam.salonpro.servicios.CitaService;
+import com.salesianostriana.dam.salonpro.servicios.CuponServicio;
 import com.salesianostriana.dam.salonpro.servicios.ServiciosServicio;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class CarritoControlador {
 	private final ServiciosServicio serviciosServicio;
 	private final ClienteServicio clienteServicio;
 	private final CitaService citaService;
+	private final CuponServicio cuponServicio;
 
 	// Listar
 
@@ -46,6 +48,7 @@ public class CarritoControlador {
 		model.addAttribute("productos", serviciosServicio.findAll());
 		model.addAttribute("carrito", carritoServicio.getProductsInCart());
 		model.addAttribute("cliente", cliente);
+		model.addAttribute("cuponesDisponibles", cuponServicio.listarCuponesDisponibles(cliente));
 
 		return "usuario/pedirServicios";
 	}
