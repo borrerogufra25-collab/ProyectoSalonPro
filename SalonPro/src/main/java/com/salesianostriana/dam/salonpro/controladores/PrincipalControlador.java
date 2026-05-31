@@ -36,7 +36,8 @@ public class PrincipalControlador {
 	@GetMapping("/inicioAdmin/estadisticas")
 	public String estadisticas(Model model) {
 		model.addAttribute("serviciosPopulares", citaService.listarServiciosPopulares());
-		return "estadisticas/serviciosPopulares";
+		model.addAttribute("clientesConMasVisitas", citaService.listarClientesConMasVisitas());
+		return "estadisticas/estadisticas";
 	}
 
 	@GetMapping("/inicioUsuario")
