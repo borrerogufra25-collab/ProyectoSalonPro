@@ -16,8 +16,8 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
 	@Query("""
 			SELECT DISTINCT c
 			FROM Cita c
-			LEFT JOIN FETCH c.citaServicios cs
-			LEFT JOIN FETCH cs.servicio
+			LEFT JOIN c.citaServicios cs
+			LEFT JOIN cs.servicio
 			WHERE c.cliente.id = :clienteId
 			ORDER BY c.fecha DESC
 			""")
@@ -28,9 +28,9 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
 	@Query("""
 			SELECT DISTINCT c
 			FROM Cita c
-			LEFT JOIN FETCH c.cliente
-			LEFT JOIN FETCH c.citaServicios cs
-			LEFT JOIN FETCH cs.servicio
+			LEFT JOIN c.cliente
+			LEFT JOIN c.citaServicios cs
+			LEFT JOIN cs.servicio
 			ORDER BY c.fecha DESC
 			""")
 	List<Cita> findAllConServicios();
@@ -38,9 +38,9 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
 	@Query("""
 			SELECT DISTINCT c
 			FROM Cita c
-			LEFT JOIN FETCH c.cliente
-			LEFT JOIN FETCH c.citaServicios cs
-			LEFT JOIN FETCH cs.servicio
+			LEFT JOIN c.cliente
+			LEFT JOIN c.citaServicios cs
+			LEFT JOIN cs.servicio
 			WHERE c.fecha >= :fecha
 			ORDER BY c.fecha ASC
 			""")
@@ -49,10 +49,19 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
 	@Query("""
 			SELECT DISTINCT c
 			FROM Cita c
-			LEFT JOIN FETCH c.cliente
+			LEFT JOIN c.cliente
 			JOIN c.citaServicios cs
 			WHERE cs.servicio.id = :servicioId
 			""")
 	List<Cita> findByServicioId(@Param("servicioId") Long servicioId);
+
+	@Query("""
+			SELECT s.id, s.nombre, COUNT(cs), COALESCE(SUM(s.precio), 0.0)
+			FROM CitaServicio cs
+			JOIN cs.servicio s
+			GROUP BY s.id, s.nombre
+			ORDER BY COUNT(cs) DESC, s.nombre ASC
+			""")
+	List<Object[]> findServiciosPopulares();
 
 }
