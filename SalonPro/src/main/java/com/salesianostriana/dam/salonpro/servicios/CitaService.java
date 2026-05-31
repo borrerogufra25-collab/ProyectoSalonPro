@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.salesianostriana.dam.salonpro.excepciones.ConflictoFechaException;
@@ -42,6 +43,10 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 
 	public List<Object[]> listarServiciosPopulares() {
 		return repository.findServiciosPopulares();
+	}
+
+	public List<Object[]> listarClientesConMasVisitas() {
+		return repository.findClientesConMasVisitas();
 	}
 
 	// Tiempos (validaciones y calcular)

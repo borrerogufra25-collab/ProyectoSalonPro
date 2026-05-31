@@ -3,6 +3,7 @@ package com.salesianostriana.dam.salonpro.repositorios;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -63,5 +64,14 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
 			ORDER BY COUNT(cs) DESC, s.nombre ASC
 			""")
 	List<Object[]> findServiciosPopulares();
+
+	@Query("""
+			SELECT cl.id, cl.nombre, cl.email, COUNT(c)
+			FROM Cita c
+			JOIN c.cliente cl
+			GROUP BY cl.id, cl.nombre, cl.email
+			ORDER BY COUNT(c) DESC, cl.nombre ASC
+			""")
+	List<Object[]> findClientesConMasVisitas();
 
 }
