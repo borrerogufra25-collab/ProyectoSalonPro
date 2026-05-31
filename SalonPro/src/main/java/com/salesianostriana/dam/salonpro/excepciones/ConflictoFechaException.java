@@ -11,6 +11,11 @@ public class ConflictoFechaException extends RuntimeException {
 		this.errorCita = errorCita;
 	}
 
+	public ConflictoFechaException(String mensaje) {
+		super(mensaje);
+		this.errorCita = null;
+	}
+
 	public Cita getErrorCita() {
 		return errorCita;
 	}

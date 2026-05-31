@@ -1,10 +1,12 @@
 package com.salesianostriana.dam.salonpro.controladores;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.NoSuchElementException;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -16,12 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.salesianostriana.dam.salonpro.excepciones.ConflictoFechaException;
-import com.salesianostriana.dam.salonpro.modelo.Cliente;
 import com.salesianostriana.dam.salonpro.modelo.Cita;
+import com.salesianostriana.dam.salonpro.modelo.Cliente;
 import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.servicios.CarritoServicio;
-import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
 import com.salesianostriana.dam.salonpro.servicios.CitaService;
+import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
 import com.salesianostriana.dam.salonpro.servicios.CuponServicio;
 import com.salesianostriana.dam.salonpro.servicios.ServiciosServicio;
 
@@ -107,11 +109,13 @@ public class CarritoControlador {
 
 		if (carritoServicio.getProductsInCart()
 				.isEmpty()) {
-			return "redirect:/inicioUsuario/servicios?error=carritoVacio";
+			String msg = URLEncoder.encode("Debes añadir servicios antes de reservar", StandardCharsets.UTF_8);
+			return "redirect:/inicioUsuario/servicios?error=" + msg;
 		}
 
 		if (fechaHora.isBefore(LocalDateTime.now())) {
-			return "redirect:/inicioUsuario/servicios?error=fechaPasada";
+			String msg = URLEncoder.encode("La fecha seleccionada no puede ser pasada", StandardCharsets.UTF_8);
+			return "redirect:/inicioUsuario/servicios?error=" + msg;
 		}
 
 		Cliente cliente = clienteServicio.findByEmail(principal.getName())
@@ -129,7 +133,7 @@ public class CarritoControlador {
 		try {
 			citaService.registrarCita(cita, cliente.getId(), carrito, observaciones);
 		} catch (ConflictoFechaException e) {
-			return "redirect:/inicioUsuario/servicios?error=conflicto";
+			return "redirect:/inicioUsuario/servicios?error=" + e.getMessage();
 		}
 
 		carritoServicio.vaciarCarrito();
