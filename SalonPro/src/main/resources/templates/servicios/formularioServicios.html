@@ -57,7 +57,8 @@
 
 					<div class="mb-3">
 						<label class="form-label text-warning fw-bold" for="duracion">Duración (minutos)</label>
-						<input type="number" th:classappend="${#fields.hasErrors('duracion')} ? 'is-invalid' : ''"
+						<input type="number" min="0"
+							th:classappend="${#fields.hasErrors('duracion')} ? 'is-invalid' : ''"
 							class="form-control border-warning bg-white text-dark" th:field="*{duracion}" required>
 						<div class="invalid-feedback" th:if="${#fields.hasErrors('duracion')}" th:errors="*{duracion}">
 						</div>

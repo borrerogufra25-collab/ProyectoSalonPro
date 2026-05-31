@@ -41,7 +41,7 @@ public class Servicio {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.NONE)
 	private Duration duracion;
 
-	@OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "servicio", cascade = CascadeType.REMOVE)
 	private List<CitaServicio> citaServicios;
 
 	// Prueba

@@ -37,6 +37,7 @@
 						<th>Código</th>
 						<th>Fecha y Hora</th>
 						<th>Cliente</th>
+						<th>Servicios</th>
 						<th>Precio Total</th>
 						<th>Observaciones</th>
 						<th>Opciones</th>
@@ -48,8 +49,17 @@
 						<td th:text="${c.codigo}">-</td>
 						<td th:text="${#temporals.format(c.fecha, 'dd/MM/yyyy HH:mm')}">-</td>
 						<td th:text="${c.cliente.nombre}">-</td>
+						<td>
+							<ul class="mb-0 ps-3">
+								<li th:each="cs : ${c.citaServicios}" th:text="${cs.servicio.nombre}">-</li>
+							</ul>
+							<span th:if="${c.citaServicios == null or c.citaServicios.isEmpty()}">-</span>
+						</td>
 						<td th:text="${c.precioTotal} + ' €'">-</td>
-						<td th:text="${!c.citaServicios.isEmpty()} ? ${c.citaServicios[0].observaciones} : '-'"></td>
+						<td
+							th:text="${c.citaServicios != null and !c.citaServicios.isEmpty()} ? ${c.citaServicios[0].observaciones} : '-'">
+							-
+						</td>
 
 						<td>
 							<a class="btn btn-sm btn-warning"

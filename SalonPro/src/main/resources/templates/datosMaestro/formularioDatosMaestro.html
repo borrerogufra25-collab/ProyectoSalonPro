@@ -25,7 +25,7 @@
 				</h2>
 
 				<div th:if="${param.exito}" class="alert alert-success">
-					El descuento de cumpleaños se ha guardado correctamente.
+					La configuración se ha guardado correctamente.
 				</div>
 
 				<form th:action="@{/inicioAdmin/configuracion/submit}" th:object="${datosMaestro}" method="post"
@@ -43,6 +43,48 @@
 							required>
 						<div class="invalid-feedback" th:if="${#fields.hasErrors('descuentoCumple')}"
 							th:errors="*{descuentoCumple}">
+							Introduce un descuento entre 0 y 100.
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label text-warning fw-bold" for="cortesPorPunto">
+							Cortes necesarios para conseguir un punto
+						</label>
+						<input id="cortesPorPunto" type="number" min="1"
+							th:classappend="${#fields.hasErrors('cortesPorPunto')} ? 'is-invalid' : ''"
+							class="form-control border-warning bg-white text-dark" th:field="*{cortesPorPunto}"
+							required>
+						<div class="invalid-feedback" th:if="${#fields.hasErrors('cortesPorPunto')}"
+							th:errors="*{cortesPorPunto}">
+							Introduce al menos 1 corte.
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label text-warning fw-bold" for="puntosParaCupon">
+							Puntos necesarios para generar el cupón de descuento
+						</label>
+						<input id="puntosParaCupon" type="number" min="1"
+							th:classappend="${#fields.hasErrors('puntosParaCupon')} ? 'is-invalid' : ''"
+							class="form-control border-warning bg-white text-dark" th:field="*{puntosParaCupon}"
+							required>
+						<div class="invalid-feedback" th:if="${#fields.hasErrors('puntosParaCupon')}"
+							th:errors="*{puntosParaCupon}">
+							Introduce al menos 1 punto.
+						</div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label text-warning fw-bold" for="descuentoCupon">
+							Descuento del cupón (%)
+						</label>
+						<input id="descuentoCupon" type="number" min="0" max="100" step="0.01"
+							th:classappend="${#fields.hasErrors('descuentoCupon')} ? 'is-invalid' : ''"
+							class="form-control border-warning bg-white text-dark" th:field="*{descuentoCupon}"
+							required>
+						<div class="invalid-feedback" th:if="${#fields.hasErrors('descuentoCupon')}"
+							th:errors="*{descuentoCupon}">
 							Introduce un descuento entre 0 y 100.
 						</div>
 					</div>

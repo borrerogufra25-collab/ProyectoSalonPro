@@ -16,24 +16,14 @@
 
 	<header th:replace="~{fragments/cabeceraUsuario :: cabeceraUsuario}"></header>
 
-	<!-- Validaciones -->
-
-	<div class="alert alert-danger" th:if="${param.error != null and param.error[0] == 'carritoVacio'}">
-		<i class="bi bi-exclamation-octagon-fill"></i>
-		Debes añadir al menos un servicio antes de reservar la cita.
-	</div>
-
-	<div class="alert alert-danger" th:if="${param.error != null and param.error[0] == 'conflicto'}">
-		<i class="bi bi-exclamation-octagon-fill"></i>
-		No se puede reservar en ese horario porque ya existe una cita. Elige otra hora.
-	</div>
-
-	<div class="alert alert-danger" th:if="${param.error != null and param.error[0] == 'fechaPasada'}">
-		<i class="bi bi-clock-history"></i>
-		La fecha seleccionada no puede ser pasada.
-	</div>
-
 	<div class="row">
+
+		<!-- Validaciones -->
+
+		<div class="alert alert-danger text-center" th:if="${param.error}">
+			<i class="bi bi-exclamation-octagon-fill"></i>
+			<span th:text="${param.error}"></span>
+		</div>
 
 		<!-- Servicios -->
 
@@ -114,6 +104,17 @@
 				<div class="mb-3">
 					<label class="form-label text-warning fw-bold">Cliente</label>
 					<p class="text-white-50" th:text="${cliente != null ? cliente.nombre : 'Usuario'}">Usuario</p>
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label text-warning fw-bold">Fidelización</label>
+					<p class="text-white-50 mb-1">
+						Puntos: <span th:text="${cliente != null ? cliente.puntos : 0}">0</span>
+					</p>
+					<p class="text-success mb-0"
+						th:if="${cuponesDisponibles != null and !#lists.isEmpty(cuponesDisponibles)}">
+						Tienes un cupón pendiente para esta reserva.
+					</p>
 				</div>
 
 				<div class="mb-3">
