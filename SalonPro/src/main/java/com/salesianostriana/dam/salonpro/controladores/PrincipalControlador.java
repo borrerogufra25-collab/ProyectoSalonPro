@@ -33,6 +33,12 @@ public class PrincipalControlador {
 		return "inicioAdmin";
 	}
 
+	@GetMapping("/inicioAdmin/estadisticas")
+	public String estadisticas(Model model) {
+		model.addAttribute("serviciosPopulares", citaService.listarServiciosPopulares());
+		return "estadisticas/serviciosPopulares";
+	}
+
 	@GetMapping("/inicioUsuario")
 	public String inicioUsuario(Principal principal, Model model) {
 		Optional<Cliente> cliente = clienteServicio.findByEmail(principal.getName());

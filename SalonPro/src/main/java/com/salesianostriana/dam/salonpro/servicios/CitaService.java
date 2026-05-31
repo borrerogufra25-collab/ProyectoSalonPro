@@ -40,6 +40,10 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		return repository.findTop5ByFechaGreaterThanEqualOrderByFechaAsc(LocalDateTime.now());
 	}
 
+	public List<Object[]> listarServiciosPopulares() {
+		return repository.findServiciosPopulares();
+	}
+
 	// Tiempos (validaciones y calcular)
 
 	private boolean seSolapan(LocalDateTime inicioA, LocalDateTime finA, LocalDateTime inicioB, LocalDateTime finB) {
