@@ -12,13 +12,13 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body class="bg-dark text-warning p-4">
+<body class="bg-dark text-warning d-flex flex-column min-vh-100">
 
 	<header th:replace="~{fragments/cabeceraUsuario :: cabeceraUsuario}"></header>
 
-	<div class="container py-5">
+	<main class="container py-4 py-md-5 flex-grow-1">
 		<div class="row justify-content-center">
-			<div class="col-md-8">
+			<div class="col-12 col-md-10 col-lg-8">
 				<div class="card bg-dark border-warning text-white">
 					<div class="card-header bg-warning text-dark">
 						<h3 class="mb-0">Reserva confirmada</h3>
@@ -64,7 +64,7 @@
 						<h5 class="text-warning">Servicios reservados</h5>
 						<ul class="list-group mb-3">
 							<li class="list-group-item bg-dark text-warning" th:each="entry : ${carrito}">
-								<div class="d-flex justify-content-between align-items-center">
+								<div class="d-flex justify-content-between align-items-center gap-3">
 									<div>
 										<span th:text="${entry.key.nombre}">Servicio</span>
 										<span class="text-white-50"
@@ -80,7 +80,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</main>
 
 	<footer th:replace="~{fragments/pie :: pie}"></footer>
 
