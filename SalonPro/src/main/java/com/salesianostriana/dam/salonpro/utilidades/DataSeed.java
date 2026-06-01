@@ -45,9 +45,8 @@ public class DataSeed {
 	@PostConstruct
 	public void run() {
 
-		// ============================
-		// 1. DATOS MAESTRO
-		// ============================
+		// Datos del admin
+
 		DatosMaestro dm = datosMaestroRepositorio.findById(1L)
 				.orElseGet(() -> datosMaestroRepositorio.save(DatosMaestro.builder()
 						.descuentoCumple(10.0)
@@ -56,9 +55,8 @@ public class DataSeed {
 						.descuentoCupon(15.0)
 						.build()));
 
-		// ============================
-		// 2. CLIENTES
-		// ============================
+		// Clientes
+
 		List<Cliente> clientesOriginales = List.of(
 
 				Cliente.builder()
@@ -111,9 +109,8 @@ public class DataSeed {
 						.cumple(LocalDate.of(1960, 11, 12))
 						.build());
 
-		// ============================
-		// 3. USUARIO Y ADMIN
-		// ============================
+		// Roles de prueba
+
 		Cliente usuarioPrueba = Cliente.builder()
 				.nombre("Usuario de Prueba")
 				.telefono("999999999")
@@ -132,9 +129,8 @@ public class DataSeed {
 				.role(UserRole.ADMIN)
 				.build();
 
-		// ============================
-		// 4. CALCULAR PUNTOS INICIALES
-		// ============================
+		// Puntos iniciales
+
 		clientesOriginales.forEach(c -> {
 			int puntos = c.getNumCortes() / dm.getCortesPorPunto();
 			c.setPuntos(puntos);
@@ -144,14 +140,14 @@ public class DataSeed {
 
 		// 5. GUARDAR CLIENTES
 		List<Cliente> clientesGuardados = clienteRepositorio.saveAll(clientesOriginales);
-		usuarioPrueba = clienteRepositorio.save(usuarioPrueba); // ← IMPORTANTE
+		usuarioPrueba = clienteRepositorio.save(usuarioPrueba);
 		clienteRepositorio.save(adminPrueba);
 
 		// 6. GENERAR CUPONES INICIALES
 		if (usuarioPrueba.getPuntos() >= dm.getPuntosParaCupon()) {
 
 			Cupon cupon = Cupon.builder()
-					.cliente(usuarioPrueba) // ← ahora sí tiene ID
+					.cliente(usuarioPrueba)
 					.descuento(dm.getDescuentoCupon())
 					.usado(false)
 					.fechaCreacion(LocalDateTime.now())

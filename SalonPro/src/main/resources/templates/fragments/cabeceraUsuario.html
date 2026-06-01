@@ -9,11 +9,12 @@
 			<div class="container-fluid">
 
 				<a class="navbar-brand text-warning fw-bold" th:href="@{/inicioUsuario}">
-					<i class="bi bi-person-circle me-2 fs-3"></i>Área Usuario
+					<i class="bi bi-person-circle me-2 fs-3"></i> Área Usuario
 				</a>
 
 				<button class="navbar-toggler border-warning" type="button" data-bs-toggle="collapse"
-					data-bs-target="#navbarUsuario">
+					data-bs-target="#navbarUsuario" aria-controls="navbarUsuario" aria-expanded="false"
+					aria-label="Abrir navegación">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 
@@ -32,7 +33,7 @@
 					</ul>
 
 					<form th:action="@{/logout}" method="post" id="salir"></form>
-					<a class="logout btn btn-outline-warning fw-bold"
+					<a class="logout btn btn-outline-warning fw-bold mt-3 mt-lg-0"
 						href="javascript:document.getElementById('salir').submit()">Cerrar sesión</a>
 
 				</div>

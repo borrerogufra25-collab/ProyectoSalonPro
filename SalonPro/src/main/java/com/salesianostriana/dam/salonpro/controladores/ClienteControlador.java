@@ -28,7 +28,9 @@ public class ClienteControlador {
 	// Listar
 	@GetMapping("/inicioAdmin/clientes")
 	public String listarClientes(Model model) {
-		model.addAttribute("listaClientes", clienteServicio.findAll());
+		model.addAttribute("listaClientes", clienteServicio.findAll().stream()
+				.filter(c -> c.getRole() != UserRole.ADMIN)
+				.toList());
 		return "clientes/listarClientes";
 	}
 

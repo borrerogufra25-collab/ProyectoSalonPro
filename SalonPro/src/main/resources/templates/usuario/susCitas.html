@@ -18,7 +18,7 @@
 
 	<main class="container py-4">
 
-		<div class="d-flex justify-content-between align-items-center mb-4">
+		<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
 			<h2 class="fw-bold text-warning">Mis citas</h2>
 
 			<a class="btn btn-warning fw-bold text-black" th:href="@{/inicioUsuario/servicios}">
@@ -35,6 +35,7 @@
 						<th>Precio Total</th>
 						<th>Servicios</th>
 						<th>Observaciones</th>
+						<th>Opciones</th>
 					</tr>
 				</thead>
 
@@ -55,10 +56,52 @@
 						<td
 							th:text="${c.citaServicios != null and !c.citaServicios.isEmpty() ? c.citaServicios[0].observaciones : '-'}">
 							-</td>
+
+						<td>
+							<a class="btn btn-sm btn-warning"
+								th:href="@{/inicioUsuario/citas/editar/{id}(id=${c.codigo})}">
+								<i class="bi bi-pencil-square"></i> Editar
+							</a>
+
+							<button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+								th:data-bs-target="'#modalBorrar' + ${c.codigo}">
+								<i class="bi bi-trash"></i> Borrar
+							</button>
+
+							<div class="modal fade" th:id="'modalBorrar' + ${c.codigo}" tabindex="-1"
+								aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered">
+									<div class="modal-content bg-dark border border-warning text-white">
+
+										<div class="modal-header text-warning border-bottom border-secondary">
+											<h4 class="modal-title">¿Estás seguro?</h4>
+											<button type="button" class="btn-close btn-close-white"
+												data-bs-dismiss="modal"></button>
+										</div>
+
+										<div class="modal-body text-center py-3">
+											<p>¿Quieres eliminar esta cita?</p>
+											<p class="text-danger small">Esta acción no se puede deshacer.</p>
+										</div>
+
+										<div
+											class="modal-footer border-top border-secondary d-flex justify-content-center">
+											<a class="btn btn-danger px-4"
+												th:href="@{/inicioUsuario/citas/borrar/{id}(id=${c.codigo})}">
+												Sí
+											</a>
+											<button type="button" class="btn btn-secondary px-4"
+												data-bs-dismiss="modal">No</button>
+										</div>
+
+									</div>
+								</div>
+							</div>
+						</td>
 					</tr>
 
 					<tr th:if="${citas.isEmpty()}">
-						<td colspan="4" class="text-center text-white-50 py-4">
+						<td colspan="5" class="text-center text-white-50 py-4">
 							No tienes citas reservadas todavía.
 						</td>
 					</tr>

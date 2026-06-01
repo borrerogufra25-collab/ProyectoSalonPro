@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Editar cita</title>
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" th:href="@{/css/global.css}">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body class="bg-dark d-flex flex-column min-vh-100">
+
+	<header th:replace="~{fragments/cabeceraUsuario :: cabeceraUsuario}"></header>
+
+	<main class="container py-4">
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+				<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+					<h2 class="fw-bold text-warning">Editar cita</h2>
+
+					<a class="btn btn-outline-warning" th:href="@{/inicioUsuario/citas}">
+						<i class="bi bi-arrow-left"></i> Volver
+					</a>
+				</div>
+
+				<div class="alert alert-danger text-center" th:if="${param.error}">
+					<i class="bi bi-exclamation-octagon-fill"></i>
+					<span th:text="${param.error}"></span>
+				</div>
+
+				<form th:action="@{/inicioUsuario/citas/editar/submit}" method="post"
+					class="border border-warning rounded p-4">
+
+					<input type="hidden" name="citaId" th:value="${cita.codigo}">
+
+					<div class="mb-3">
+						<label class="form-label text-warning fw-bold">Cliente</label>
+						<p class="text-white-50 mb-0" th:text="${cliente.nombre}">Cliente</p>
+					</div>
+
+					<div class="mb-4">
+						<label class="form-label text-warning fw-bold">Fecha y Hora</label>
+						<input name="fecha" type="datetime-local" class="form-control border-warning bg-white text-dark"
+							th:value="${#temporals.format(cita.fecha, 'yyyy-MM-dd''T''HH:mm')}" required>
+					</div>
+
+					<div class="mb-4">
+						<label class="form-label text-warning fw-bold">Servicios</label>
+
+						<div class="table-responsive">
+							<table class="table table-dark table-striped align-middle mb-0">
+								<thead>
+									<tr class="text-warning">
+										<th>Servicio</th>
+										<th>Precio</th>
+										<th>Duración</th>
+										<th class="text-center">Cantidad</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="s : ${listaServicios}">
+										<td th:text="${s.nombre}">Servicio</td>
+										<td th:text="${s.precio + ' €'}">0 €</td>
+										<td th:text="${s.duracion != null ? s.duracion.toMinutes() + ' min' : '-'}">-
+										</td>
+										<td class="text-center">
+											<input type="number" min="0" class="form-control form-control-sm text-center mx-auto"
+												style="max-width: 90px;" th:name="${'cantidadServicio_' + s.id}"
+												th:value="${serviciosCantidad[s.id] != null ? serviciosCantidad[s.id] : 0}">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="mb-4">
+						<label class="form-label text-warning fw-bold">Observaciones</label>
+						<textarea class="form-control border-warning bg-white text-dark" name="observaciones" rows="3"
+							th:text="${observaciones}"></textarea>
+					</div>
+
+					<button type="submit" class="btn btn-warning text-black fw-bold w-100">
+						<i class="bi bi-check-circle"></i> Guardar cambios
+					</button>
+				</form>
+			</div>
+		</div>
+	</main>
+
+	<footer th:replace="~{fragments/pie :: pie}"></footer>
+
+</body>
+
+</html>
