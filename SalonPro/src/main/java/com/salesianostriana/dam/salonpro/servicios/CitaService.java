@@ -101,6 +101,10 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 	}
 
 	private void validarSolapamientos(LocalDateTime inicio, Map<Servicio, Integer> servicios) {
+		validarSolapamientos(inicio, servicios, null);
+	}
+
+	private void validarSolapamientos(LocalDateTime inicio, Map<Servicio, Integer> servicios, Long citaIdIgnorada) {
 
 		long duracionNueva = calcularDuracionTotal(servicios);
 		LocalDateTime finNueva = inicio.plusMinutes(duracionNueva);
@@ -108,6 +112,7 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		List<Cita> todas = this.findAll();
 
 		boolean conflicto = todas.stream()
+				.filter(citaExistente -> citaIdIgnorada == null || !citaIdIgnorada.equals(citaExistente.getCodigo()))
 				.anyMatch(citaExistente -> {
 
 					long duracionExistente = citaExistente.getCitaServicios()
@@ -145,6 +150,25 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 
 		double precioFinal = cuponServicio.calcularPrecioConCupon(cupon, precioConCumple);
 		return precioFinal;
+	}
+
+	private double calcularPrecioFinalActualizacion(Cita cita, Cliente cliente, Map<Servicio, Integer> servicios) {
+
+		double precioBase = servicios.entrySet()
+				.stream()
+				.mapToDouble(e -> e.getKey()
+						.getPrecio() * e.getValue())
+				.sum();
+
+		double precioConCumple = clienteServicio.aplicarDescuentoCumple(cliente, precioBase);
+
+		Cupon cupon = cuponServicio.buscarCuponUsadoEnCita(cita)
+				.filter(c -> c.getCliente() != null && c.getCliente()
+						.getId()
+						.equals(cliente.getId()))
+				.orElse(null);
+
+		return cuponServicio.calcularPrecioConCupon(cupon, precioConCumple);
 	}
 
 	private List<CitaServicio> generarDetalles(Cita cita, Map<Servicio, Integer> servicios, String obs) {
@@ -197,5 +221,43 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 				.ifPresent(c -> cuponServicio.marcarComoUsado(c, cita));
 
 		clienteServicio.aumentarPelados(cliente);
+	}
+
+	@Transactional
+	public void actualizarCita(Long citaId, Long clienteId, Map<Servicio, Integer> servicios, LocalDateTime fecha,
+			String observaciones) {
+
+		boolean sinServicios = (servicios == null || servicios.isEmpty());
+		if (sinServicios) {
+			throw new IllegalArgumentException("No se han seleccionado servicios para la cita");
+		}
+
+		Cita cita = this.findById(citaId)
+				.orElseThrow(() -> new EntityNotFoundException("Cita no encontrada"));
+
+		Cliente cliente = clienteServicio.findById(clienteId)
+				.orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
+
+		if (fecha.isBefore(LocalDateTime.now())) {
+			throw new ConflictoFechaException("La fecha seleccionada no puede ser pasada");
+		}
+
+		validarHorario(fecha, servicios);
+		validarSolapamientos(fecha, servicios, citaId);
+
+		cita.setFecha(fecha);
+		cita.setCliente(cliente);
+		cita.setPrecioTotal(calcularPrecioFinalActualizacion(cita, cliente, servicios));
+
+		if (cita.getCitaServicios() != null) {
+			cita.getCitaServicios()
+					.clear();
+			cita.getCitaServicios()
+					.addAll(generarDetalles(cita, servicios, observaciones));
+		} else {
+			cita.setCitaServicios(generarDetalles(cita, servicios, observaciones));
+		}
+
+		this.edit(cita);
 	}
 }

@@ -24,7 +24,7 @@
 				</h2>
 
 				<div th:if="${param.error}" class="alert alert-danger">
-					Error: Ya existe una cita en esa fecha/hora que solapa con este servicio.
+					<span th:text="${param.error}">Error al guardar la cita.</span>
 				</div>
 
 				<form
@@ -49,7 +49,7 @@
 						</select>
 					</div>
 
-					<div class="mb-3">
+					<div class="mb-3" th:if="${cita.codigo == null}">
 						<label class="form-label text-warning fw-bold">Servicio</label>
 						<select class="form-select border-warning bg-white" name="servicioId" id="servicioSelect"
 							required>
@@ -58,6 +58,37 @@
 								th:selected="${cita.citaServicios != null and !cita.citaServicios.isEmpty() and cita.citaServicios[0].servicio.id == s.id}"
 								th:text="${s.nombre} + ' (' + ${s.precio} + ' €)'"></option>
 						</select>
+					</div>
+
+					<div class="mb-3" th:if="${cita.codigo != null}">
+						<label class="form-label text-warning fw-bold">Servicios</label>
+
+						<div class="table-responsive">
+							<table class="table table-dark table-striped align-middle mb-0">
+								<thead>
+									<tr class="text-warning">
+										<th>Servicio</th>
+										<th>Precio</th>
+										<th>Duración</th>
+										<th class="text-center">Cantidad</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="s : ${listaServicios}">
+										<td th:text="${s.nombre}">Servicio</td>
+										<td th:text="${s.precio + ' €'}">0 €</td>
+										<td th:text="${s.duracion != null ? s.duracion.toMinutes() + ' min' : '-'}">-
+										</td>
+										<td class="text-center">
+											<input type="number" min="0"
+												class="form-control form-control-sm text-center mx-auto"
+												style="max-width: 90px;" th:name="${'cantidadServicio_' + s.id}"
+												th:value="${serviciosCantidad[s.id] != null ? serviciosCantidad[s.id] : 0}">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 
 					<div class="mb-3">
@@ -74,6 +105,7 @@
 						<button type="submit" value="submit" class="btn btn-warning text-black fw-bold">
 							<i class="bi bi-check-circle"></i> Guardar
 						</button>
+					</div>
 				</form>
 			</div>
 		</div>
