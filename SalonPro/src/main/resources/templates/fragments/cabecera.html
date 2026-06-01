@@ -1,12 +1,18 @@
 <header th:fragment="cabecera" class="border-bottom border-secondary">
 
-	<nav class="navbar navbar-expand-lg sticky-top">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
 		<div class="container-fluid">
 
 			<a class="navbar-brand d-flex align-items-center text-warning" th:href="@{/}">
 				<i class="bi bi-scissors me-2 fs-2"></i>
 				<span class="fs-4 fw-bold">SalonPro</span>
 			</a>
+
+			<button class="navbar-toggler border-warning" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+				aria-label="Abrir navegación">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav mx-auto">
@@ -27,13 +33,13 @@
 					</li>
 				</ul>
 
-				<div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+				<div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3 mt-3 mt-lg-0">
 					<a href="#" class="text-decoration-none d-flex align-items-center gap-2 text-warning">
 						<i class="bi bi-telephone-fill"></i>
 						<span>954 33 14 88</span>
 					</a>
 
-					<a class="btn btn-warning rounded-pill d-flex align-items-center gap-2 fw-bold text-black"
+					<a class="btn btn-warning rounded-pill d-flex align-items-center justify-content-center gap-2 fw-bold text-black"
 						th:href="@{/inicioSesion}">
 						<i class="bi bi-calendar-event"></i>
 						Reservar Cita
