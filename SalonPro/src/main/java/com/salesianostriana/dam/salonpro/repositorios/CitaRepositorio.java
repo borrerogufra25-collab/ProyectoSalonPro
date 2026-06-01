@@ -3,7 +3,6 @@ package com.salesianostriana.dam.salonpro.repositorios;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,18 +22,6 @@ public interface CitaRepositorio extends JpaRepository<Cita, Long> {
 			ORDER BY c.fecha DESC
 			""")
 	List<Cita> findByClienteId(@Param("clienteId") Long clienteId);
-
-	List<Cita> findAllByOrderByFechaDesc();
-
-	@Query("""
-			SELECT DISTINCT c
-			FROM Cita c
-			LEFT JOIN c.cliente
-			LEFT JOIN c.citaServicios cs
-			LEFT JOIN cs.servicio
-			ORDER BY c.fecha DESC
-			""")
-	List<Cita> findAllConServicios();
 
 	@Query("""
 			SELECT DISTINCT c

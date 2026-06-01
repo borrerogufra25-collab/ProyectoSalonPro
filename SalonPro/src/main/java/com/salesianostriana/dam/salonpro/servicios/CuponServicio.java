@@ -68,4 +68,18 @@ public class CuponServicio extends BaseServiciosImpl<Cupon, Long, CuponRepositor
 		cupon.setCitaUso(cita);
 		save(cupon);
 	}
+
+	public void liberarCuponesDeCita(Cita cita) {
+		if (cita == null || cita.getCodigo() == null) {
+			return;
+		}
+
+		repository.findByCitaUsoCodigo(cita.getCodigo())
+				.forEach(cupon -> {
+					cupon.setUsado(false);
+					cupon.setFechaUso(null);
+					cupon.setCitaUso(null);
+					save(cupon);
+				});
+	}
 }

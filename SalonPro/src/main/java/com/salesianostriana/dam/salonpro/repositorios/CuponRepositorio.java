@@ -15,5 +15,7 @@ public interface CuponRepositorio extends JpaRepository<Cupon, Long> {
 
 	Optional<Cupon> findFirstByCitaUsoCodigo(Long citaId);
 
+	List<Cupon> findByCitaUsoCodigo(Long citaId);
+
 	List<Cupon> findByClienteIdAndUsadoFalseOrderByFechaCreacionAsc(Long clienteId);
 }

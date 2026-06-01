@@ -52,6 +52,14 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		return repository.findClientesConMasVisitas();
 	}
 
+	public Cita obtenerCitaDeCliente(Long citaId, Long clienteId) {
+		return findById(citaId)
+				.filter(c -> c.getCliente() != null && c.getCliente()
+						.getId()
+						.equals(clienteId))
+				.orElseThrow(() -> new NoSuchElementException("Cita no encontrada"));
+	}
+
 	// Validaciones Tiempo
 
 	private boolean seSolapan(LocalDateTime inicioA, LocalDateTime finA, LocalDateTime inicioB, LocalDateTime finB) {
@@ -276,6 +284,16 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		actualizarCita(citaId, clienteId, servicios, fecha, observaciones);
 	}
 
+	@Transactional
+	public void registrarCitaAdmin(Cita cita, Long clienteId, Map<String, String> params, String observaciones) {
+		clienteServicio.findById(clienteId)
+				.orElseThrow(() -> new NoSuchElementException("Cliente no encontrado"));
+
+		Map<Servicio, Integer> servicios = obtenerServiciosDesdeFormulario(params);
+
+		registrarCita(cita, clienteId, servicios, observaciones);
+	}
+
 	// Ayudas
 
 	public Map<Long, Integer> obtenerCantidadesServicios(Cita cita) {
@@ -341,6 +359,7 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		cita.getCliente()
 				.getListaCitas()
 				.remove(cita);
+		cuponServicio.liberarCuponesDeCita(cita);
 		this.delete(cita);
 	}
 
@@ -356,6 +375,7 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 					.remove(cita);
 		}
 
+		cuponServicio.liberarCuponesDeCita(cita);
 		this.delete(cita);
 	}
 }

@@ -1,9 +1,7 @@
 package com.salesianostriana.dam.salonpro.controladores;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,11 +27,9 @@ public class ServicioControlador {
 	@GetMapping("/inicioAdmin/servicios")
 	public String listarServicios(Model model) {
 		List<Servicio> servicios = servicioServicio.findAll();
-		Map<Long, Boolean> serviciosConCitas = servicios.stream()
-				.collect(Collectors.toMap(Servicio::getId, s -> servicioServicio.tieneCitasAsociadas(s.getId())));
 
 		model.addAttribute("Servicios", servicios);
-		model.addAttribute("serviciosConCitas", serviciosConCitas);
+		model.addAttribute("serviciosConCitas", servicioServicio.obtenerMapaServiciosConCitas(servicios));
 		return "servicios/listarServicios";
 	}
 
@@ -80,11 +76,7 @@ public class ServicioControlador {
 	// Borrar
 	@GetMapping("/inicioAdmin/servicios/borrar/{id}")
 	public String borrar(@PathVariable("id") long id) {
-		Optional<Servicio> sBorrar = servicioServicio.findById(id);
-
-		if (sBorrar.isPresent()) {
-			servicioServicio.borrarServicioYCitasAsociadas(sBorrar.get());
-		}
+		servicioServicio.borrarServicioYCitasAsociadasSiExiste(id);
 		return "redirect:/inicioAdmin/servicios";
 	}
 }
