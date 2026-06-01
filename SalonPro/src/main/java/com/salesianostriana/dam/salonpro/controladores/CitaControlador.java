@@ -4,7 +4,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.salesianostriana.dam.salonpro.excepciones.ConflictoFechaException;
 import com.salesianostriana.dam.salonpro.modelo.Cita;
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
-import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.servicios.CitaService;
 import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
 import com.salesianostriana.dam.salonpro.servicios.ServiciosServicio;
@@ -67,11 +65,7 @@ public class CitaControlador {
 		Cliente cliente = clienteServicio.findByEmail(principal.getName())
 				.orElseThrow(() -> new NoSuchElementException("Cliente no encontrado"));
 
-		Cita cita = citaService.findById(id)
-				.filter(c -> c.getCliente() != null && c.getCliente()
-						.getId()
-						.equals(cliente.getId()))
-				.orElseThrow(() -> new NoSuchElementException("Cita no encontrada"));
+		Cita cita = citaService.obtenerCitaDeCliente(id, cliente.getId());
 
 		model.addAttribute("cliente", cliente);
 		model.addAttribute("cita", cita);
@@ -107,27 +101,21 @@ public class CitaControlador {
 		model.addAttribute("cita", new Cita());
 		model.addAttribute("listaClientes", clienteServicio.findAll());
 		model.addAttribute("listaServicios", serviciosServicio.findAll());
+		model.addAttribute("serviciosCantidad", Map.of());
+		model.addAttribute("observaciones", "");
 		return "citas/formularioCita";
 	}
 
 	@PostMapping("/inicioAdmin/citas/nueva/submit")
-	public String submitNueva(@ModelAttribute("cita") Cita cita, @RequestParam("servicioId") Long servicioId,
-			@RequestParam("clienteId") Long clienteId, @RequestParam("observaciones") String observaciones) {
+	public String submitNueva(@ModelAttribute("cita") Cita cita, @RequestParam("clienteId") Long clienteId,
+			@RequestParam("observaciones") String observaciones, @RequestParam Map<String, String> params) {
 
 		try {
-			Servicio servicio = serviciosServicio.findById(servicioId)
-					.orElseThrow(() -> new NoSuchElementException("Servicio no encontrado"));
-
-			Map<Servicio, Integer> servicios = new HashMap<>();
-			servicios.put(servicio, 1);
-
-			citaService.registrarCita(cita, clienteId, servicios, observaciones);
+			citaService.registrarCitaAdmin(cita, clienteId, params, observaciones);
 			return "redirect:/inicioAdmin/citas";
 
-		} catch (ConflictoFechaException e) {
-			return "redirect:/inicioAdmin/citas/nueva?error=conflicto";
-		} catch (Exception e) {
-			return "redirect:/inicioAdmin/citas/nueva?error=desconocido";
+		} catch (ConflictoFechaException | IllegalArgumentException e) {
+			return "redirect:/inicioAdmin/citas/nueva?error=" + codificar(e.getMessage());
 		}
 	}
 

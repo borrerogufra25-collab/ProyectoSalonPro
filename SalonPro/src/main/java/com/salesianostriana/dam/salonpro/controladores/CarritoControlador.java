@@ -4,8 +4,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,14 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.salesianostriana.dam.salonpro.excepciones.ConflictoFechaException;
-import com.salesianostriana.dam.salonpro.modelo.Cita;
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
 import com.salesianostriana.dam.salonpro.modelo.Servicio;
 import com.salesianostriana.dam.salonpro.servicios.CarritoServicio;
-import com.salesianostriana.dam.salonpro.servicios.CitaService;
 import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
 import com.salesianostriana.dam.salonpro.servicios.CuponServicio;
 import com.salesianostriana.dam.salonpro.servicios.ServiciosServicio;
+import com.salesianostriana.dam.salonpro.servicios.TicketCita;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +33,6 @@ public class CarritoControlador {
 	private final CarritoServicio carritoServicio;
 	private final ServiciosServicio serviciosServicio;
 	private final ClienteServicio clienteServicio;
-	private final CitaService citaService;
 	private final CuponServicio cuponServicio;
 
 	// Listar
@@ -107,46 +103,24 @@ public class CarritoControlador {
 			@RequestParam("fechaHora") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaHora,
 			@RequestParam("observaciones") String observaciones, Principal principal, Model model) {
 
-		if (carritoServicio.getProductsInCart()
-				.isEmpty()) {
-			String msg = URLEncoder.encode("Debes añadir servicios antes de reservar", StandardCharsets.UTF_8);
-			return "redirect:/inicioUsuario/servicios?error=" + msg;
-		}
-
-		if (fechaHora.isBefore(LocalDateTime.now())) {
-			String msg = URLEncoder.encode("La fecha seleccionada no puede ser pasada", StandardCharsets.UTF_8);
-			return "redirect:/inicioUsuario/servicios?error=" + msg;
-		}
-
-		Cliente cliente = clienteServicio.findByEmail(principal.getName())
-				.orElseThrow(
-						() -> new NoSuchElementException("Cliente no encontrado con email: " + principal.getName()));
-
-		// Esto para copiar el carrito tal y como está ahora
-
-		Map<Servicio, Integer> carrito = new HashMap<>(carritoServicio.getProductsInCart());
-		double totalBase = carritoServicio.calcularTotal();
-
-		Cita cita = new Cita();
-		cita.setFecha(fechaHora);
-
 		try {
-			citaService.registrarCita(cita, cliente.getId(), carrito, observaciones);
-		} catch (ConflictoFechaException e) {
-			return "redirect:/inicioUsuario/servicios?error=" + e.getMessage();
+			TicketCita ticket = carritoServicio.tramitarCarrito(fechaHora, observaciones, principal.getName());
+			model.addAttribute("cliente", ticket.cliente());
+			model.addAttribute("carrito", ticket.carrito());
+			model.addAttribute("totalBase", ticket.totalBase());
+			model.addAttribute("total", ticket.total());
+			model.addAttribute("descuentoAplicado", ticket.descuentoAplicado());
+			model.addAttribute("fecha", ticket.fecha());
+			model.addAttribute("observaciones", ticket.observaciones());
+		} catch (ConflictoFechaException | IllegalArgumentException e) {
+			return "redirect:/inicioUsuario/servicios?error=" + codificar(e.getMessage());
 		}
-
-		carritoServicio.vaciarCarrito();
-
-		model.addAttribute("cliente", cliente);
-		model.addAttribute("carrito", carrito);
-		model.addAttribute("totalBase", totalBase);
-		model.addAttribute("total", cita.getPrecioTotal());
-		model.addAttribute("descuentoAplicado", totalBase - cita.getPrecioTotal());
-		model.addAttribute("fecha", fechaHora);
-		model.addAttribute("observaciones", observaciones);
 
 		return "usuario/ticket";
+	}
+
+	private String codificar(String mensaje) {
+		return URLEncoder.encode(mensaje, StandardCharsets.UTF_8);
 	}
 
 }
