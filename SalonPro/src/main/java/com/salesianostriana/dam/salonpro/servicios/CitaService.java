@@ -3,12 +3,14 @@ package com.salesianostriana.dam.salonpro.servicios;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.salesianostriana.dam.salonpro.excepciones.ConflictoFechaException;
@@ -30,6 +32,7 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 
 	private final ClienteServicio clienteServicio;
 	private final CuponServicio cuponServicio;
+	private final ServiciosServicio serviciosServicio;
 
 	// Consultas
 
@@ -49,33 +52,25 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		return repository.findClientesConMasVisitas();
 	}
 
-	// Tiempos (validaciones y calcular)
+	// Validaciones Tiempo
 
 	private boolean seSolapan(LocalDateTime inicioA, LocalDateTime finA, LocalDateTime inicioB, LocalDateTime finB) {
-
-		boolean solapan = inicioA.isBefore(finB) && finA.isAfter(inicioB);
-		return solapan;
+		return inicioA.isBefore(finB) && finA.isAfter(inicioB);
 	}
 
 	private List<Servicio> expandServicios(Map<Servicio, Integer> servicios) {
-
-		List<Servicio> listaExpandida = servicios.entrySet()
+		return servicios.entrySet()
 				.stream()
 				.flatMap(entry -> IntStream.range(0, entry.getValue())
 						.mapToObj(i -> entry.getKey()))
 				.collect(Collectors.toList());
-
-		return listaExpandida;
 	}
 
 	private long calcularDuracionTotal(Map<Servicio, Integer> servicios) {
-
-		long minutosTotales = expandServicios(servicios).stream()
+		return expandServicios(servicios).stream()
 				.mapToLong(s -> s.getDuracion()
 						.toMinutes())
 				.sum();
-
-		return minutosTotales;
 	}
 
 	private void validarHorario(LocalDateTime inicio, Map<Servicio, Integer> servicios) {
@@ -86,16 +81,13 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		long minutosTotales = calcularDuracionTotal(servicios);
 		LocalDateTime fin = inicio.plusMinutes(minutosTotales);
 
-		boolean empiezaAntes = inicio.toLocalTime()
-				.isBefore(apertura);
-		boolean terminaDespues = fin.toLocalTime()
-				.isAfter(cierre);
-
-		if (empiezaAntes) {
+		if (inicio.toLocalTime()
+				.isBefore(apertura)) {
 			throw new ConflictoFechaException("No puedes reservar antes de las " + apertura);
 		}
 
-		if (terminaDespues) {
+		if (fin.toLocalTime()
+				.isAfter(cierre)) {
 			throw new ConflictoFechaException("El servicio seleccionado termina después de las " + cierre);
 		}
 	}
@@ -109,23 +101,23 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		long duracionNueva = calcularDuracionTotal(servicios);
 		LocalDateTime finNueva = inicio.plusMinutes(duracionNueva);
 
-		List<Cita> todas = this.findAll();
+		boolean conflicto = this.findAll()
+				.stream()
+				.filter(c -> citaIdIgnorada == null || !c.getCodigo()
+						.equals(citaIdIgnorada))
+				.anyMatch(c -> {
 
-		boolean conflicto = todas.stream()
-				.filter(citaExistente -> citaIdIgnorada == null || !citaIdIgnorada.equals(citaExistente.getCodigo()))
-				.anyMatch(citaExistente -> {
-
-					long duracionExistente = citaExistente.getCitaServicios()
+					long duracionExistente = c.getCitaServicios()
 							.stream()
 							.mapToLong(cs -> cs.getServicio()
 									.getDuracion()
 									.toMinutes())
 							.sum();
 
-					LocalDateTime finExistente = citaExistente.getFecha()
+					LocalDateTime finExistente = c.getFecha()
 							.plusMinutes(duracionExistente);
 
-					return seSolapan(inicio, finNueva, citaExistente.getFecha(), finExistente);
+					return seSolapan(inicio, finNueva, c.getFecha(), finExistente);
 				});
 
 		if (conflicto) {
@@ -148,8 +140,7 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		Cupon cupon = cuponServicio.buscarCuponDisponible(cliente)
 				.orElse(null);
 
-		double precioFinal = cuponServicio.calcularPrecioConCupon(cupon, precioConCumple);
-		return precioFinal;
+		return cuponServicio.calcularPrecioConCupon(cupon, precioConCumple);
 	}
 
 	private double calcularPrecioFinalActualizacion(Cita cita, Cliente cliente, Map<Servicio, Integer> servicios) {
@@ -187,21 +178,14 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 
 	// Crear cita
 
-	// @Transactional = Garantiza que si falla algo se vuelva a cargar y no guarde
-	// nada
 	@Transactional
 	public void registrarCita(Cita cita, Long clienteId, Map<Servicio, Integer> servicios, String observaciones) {
 
-		Cliente cliente;
-		double precioFinal;
-		List<CitaServicio> detalles;
-
-		boolean sinServicios = (servicios == null || servicios.isEmpty());
-		if (sinServicios) {
+		if (servicios == null || servicios.isEmpty()) {
 			throw new IllegalArgumentException("No se han seleccionado servicios para la cita");
 		}
 
-		cliente = clienteServicio.findById(clienteId)
+		Cliente cliente = clienteServicio.findById(clienteId)
 				.orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado"));
 
 		cita.setCliente(cliente);
@@ -209,11 +193,8 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		validarHorario(cita.getFecha(), servicios);
 		validarSolapamientos(cita.getFecha(), servicios);
 
-		precioFinal = calcularPrecioFinal(cliente, servicios);
-		cita.setPrecioTotal(precioFinal);
-
-		detalles = generarDetalles(cita, servicios, observaciones);
-		cita.setCitaServicios(detalles);
+		cita.setPrecioTotal(calcularPrecioFinal(cliente, servicios));
+		cita.setCitaServicios(generarDetalles(cita, servicios, observaciones));
 
 		this.save(cita);
 
@@ -223,12 +204,13 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		clienteServicio.aumentarPelados(cliente);
 	}
 
+	// Actualizar cita
+
 	@Transactional
 	public void actualizarCita(Long citaId, Long clienteId, Map<Servicio, Integer> servicios, LocalDateTime fecha,
 			String observaciones) {
 
-		boolean sinServicios = (servicios == null || servicios.isEmpty());
-		if (sinServicios) {
+		if (servicios == null || servicios.isEmpty()) {
 			throw new IllegalArgumentException("No se han seleccionado servicios para la cita");
 		}
 
@@ -249,15 +231,133 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		cita.setCliente(cliente);
 		cita.setPrecioTotal(calcularPrecioFinalActualizacion(cita, cliente, servicios));
 
-		if (cita.getCitaServicios() != null) {
-			cita.getCitaServicios()
-					.clear();
-			cita.getCitaServicios()
-					.addAll(generarDetalles(cita, servicios, observaciones));
-		} else {
-			cita.setCitaServicios(generarDetalles(cita, servicios, observaciones));
-		}
+		cita.getCitaServicios()
+				.clear();
+		cita.getCitaServicios()
+				.addAll(generarDetalles(cita, servicios, observaciones));
 
 		this.edit(cita);
+	}
+
+	// Editar cita (user)
+
+	@Transactional
+	public void editarCitaDeCliente(Long citaId, Long clienteId, Map<String, String> params, LocalDateTime fecha,
+			String observaciones) {
+
+		Cita cita = this.findById(citaId)
+				.orElseThrow(() -> new NoSuchElementException("Cita no encontrada"));
+
+		if (cita.getCliente() == null || !cita.getCliente()
+				.getId()
+				.equals(clienteId)) {
+			throw new IllegalArgumentException("No tienes permiso para editar esta cita");
+		}
+
+		Map<Servicio, Integer> servicios = obtenerServiciosDesdeFormulario(params);
+
+		actualizarCita(citaId, clienteId, servicios, fecha, observaciones);
+	}
+
+	// Editar cita (Admin)
+
+	@Transactional
+	public void editarCitaAdmin(Long citaId, Long clienteId, Map<String, String> params, LocalDateTime fecha,
+			String observaciones) {
+
+		this.findById(citaId)
+				.orElseThrow(() -> new NoSuchElementException("Cita no encontrada"));
+
+		clienteServicio.findById(clienteId)
+				.orElseThrow(() -> new NoSuchElementException("Cliente no encontrado"));
+
+		Map<Servicio, Integer> servicios = obtenerServiciosDesdeFormulario(params);
+
+		actualizarCita(citaId, clienteId, servicios, fecha, observaciones);
+	}
+
+	// Ayudas
+
+	public Map<Long, Integer> obtenerCantidadesServicios(Cita cita) {
+		if (cita.getCitaServicios() == null)
+			return new HashMap<>();
+
+		return cita.getCitaServicios()
+				.stream()
+				.collect(Collectors.groupingBy(cs -> cs.getServicio()
+						.getId(), Collectors.summingInt(cs -> 1)));
+	}
+
+	public String obtenerObservaciones(Cita cita) {
+		if (cita.getCitaServicios() == null || cita.getCitaServicios()
+				.isEmpty())
+			return "";
+		return cita.getCitaServicios()
+				.get(0)
+				.getObservaciones();
+	}
+
+	public Map<Servicio, Integer> obtenerServiciosDesdeFormulario(Map<String, String> params) {
+
+		Map<Servicio, Integer> servicios = new LinkedHashMap<>();
+
+		params.forEach((clave, valor) -> {
+			if (clave.startsWith("cantidadServicio_")) {
+				int cantidad = parseCantidad(valor);
+				if (cantidad > 0) {
+					Long servicioId = Long.parseLong(clave.replace("cantidadServicio_", ""));
+					Servicio servicio = serviciosServicio.findById(servicioId)
+							.orElseThrow(() -> new NoSuchElementException("Servicio no encontrado"));
+					servicios.put(servicio, cantidad);
+				}
+			}
+		});
+
+		return servicios;
+	}
+
+	private int parseCantidad(String valor) {
+		try {
+			return Integer.parseInt(valor);
+		} catch (NumberFormatException e) {
+			return 0;
+		}
+	}
+
+	// Borrar citas
+
+	@Transactional
+	public void borrarCitaDeCliente(Long citaId, Long clienteId) {
+
+		Cita cita = this.findById(citaId)
+				.orElseThrow(() -> new NoSuchElementException("Cita no encontrada"));
+
+		if (cita.getCliente() == null || !cita.getCliente()
+				.getId()
+				.equals(clienteId)) {
+			throw new IllegalArgumentException("No tienes permiso para borrar esta cita");
+		}
+
+		cita.getCliente()
+				.getListaCitas()
+				.remove(cita);
+		cuponServicio.liberarCuponDeCita(cita);
+		this.delete(cita);
+	}
+
+	@Transactional
+	public void borrarCitaAdmin(Long citaId) {
+
+		Cita cita = this.findById(citaId)
+				.orElseThrow(() -> new NoSuchElementException("Cita no encontrada"));
+
+		if (cita.getCliente() != null) {
+			cita.getCliente()
+					.getListaCitas()
+					.remove(cita);
+		}
+
+		cuponServicio.liberarCuponDeCita(cita);
+		this.delete(cita);
 	}
 }

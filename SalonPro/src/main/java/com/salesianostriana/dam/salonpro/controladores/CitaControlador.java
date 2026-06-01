@@ -5,12 +5,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -61,6 +59,8 @@ public class CitaControlador {
 		return "usuario/susCitas";
 	}
 
+	// Editar (user)
+
 	@GetMapping("/inicioUsuario/citas/editar/{id}")
 	public String editarCitaCliente(@PathVariable Long id, Principal principal, Model model) {
 
@@ -76,8 +76,8 @@ public class CitaControlador {
 		model.addAttribute("cliente", cliente);
 		model.addAttribute("cita", cita);
 		model.addAttribute("listaServicios", serviciosServicio.findAll());
-		model.addAttribute("serviciosCantidad", obtenerCantidadesServicios(cita));
-		model.addAttribute("observaciones", obtenerObservaciones(cita));
+		model.addAttribute("serviciosCantidad", citaService.obtenerCantidadesServicios(cita));
+		model.addAttribute("observaciones", citaService.obtenerObservaciones(cita));
 
 		return "usuario/formularioCita";
 	}
@@ -91,15 +91,8 @@ public class CitaControlador {
 		Cliente cliente = clienteServicio.findByEmail(principal.getName())
 				.orElseThrow(() -> new NoSuchElementException("Cliente no encontrado"));
 
-		citaService.findById(citaId)
-				.filter(c -> c.getCliente() != null && c.getCliente()
-						.getId()
-						.equals(cliente.getId()))
-				.orElseThrow(() -> new NoSuchElementException("Cita no encontrada"));
-
 		try {
-			citaService.actualizarCita(citaId, cliente.getId(), obtenerServiciosDesdeFormulario(params), fecha,
-					observaciones);
+			citaService.editarCitaDeCliente(citaId, cliente.getId(), params, fecha, observaciones);
 		} catch (ConflictoFechaException | IllegalArgumentException e) {
 			return "redirect:/inicioUsuario/citas/editar/" + citaId + "?error=" + codificar(e.getMessage());
 		}
@@ -107,26 +100,7 @@ public class CitaControlador {
 		return "redirect:/inicioUsuario/citas";
 	}
 
-	@GetMapping("/inicioUsuario/citas/borrar/{id}")
-	public String borrarCitaCliente(@PathVariable Long id, Principal principal) {
-
-		Cliente cliente = clienteServicio.findByEmail(principal.getName())
-				.orElseThrow(() -> new NoSuchElementException("Cliente no encontrado"));
-
-		citaService.findById(id)
-				.filter(cita -> cita.getCliente() != null && cita.getCliente()
-						.getId()
-						.equals(cliente.getId()))
-				.ifPresent(cita -> {
-					cliente.getListaCitas()
-							.remove(cita);
-					citaService.delete(cita);
-				});
-
-		return "redirect:/inicioUsuario/citas";
-	}
-
-	// Crear
+	// Crear (admin)
 
 	@GetMapping("/inicioAdmin/citas/nueva")
 	public String nuevaCita(Model model) {
@@ -139,14 +113,17 @@ public class CitaControlador {
 	@PostMapping("/inicioAdmin/citas/nueva/submit")
 	public String submitNueva(@ModelAttribute("cita") Cita cita, @RequestParam("servicioId") Long servicioId,
 			@RequestParam("clienteId") Long clienteId, @RequestParam("observaciones") String observaciones) {
+
 		try {
 			Servicio servicio = serviciosServicio.findById(servicioId)
 					.orElseThrow(() -> new NoSuchElementException("Servicio no encontrado"));
+
 			Map<Servicio, Integer> servicios = new HashMap<>();
 			servicios.put(servicio, 1);
 
 			citaService.registrarCita(cita, clienteId, servicios, observaciones);
 			return "redirect:/inicioAdmin/citas";
+
 		} catch (ConflictoFechaException e) {
 			return "redirect:/inicioAdmin/citas/nueva?error=conflicto";
 		} catch (Exception e) {
@@ -154,19 +131,22 @@ public class CitaControlador {
 		}
 	}
 
-	// Editar
+	// Editar (admin)
 
 	@GetMapping("/inicioAdmin/citas/editar/{id}")
 	public String editar(@PathVariable Long id, Model model) {
+
 		Optional<Cita> cita = citaService.findById(id);
+
 		if (cita.isPresent()) {
 			model.addAttribute("cita", cita.get());
 			model.addAttribute("listaClientes", clienteServicio.findAll());
 			model.addAttribute("listaServicios", serviciosServicio.findAll());
-			model.addAttribute("serviciosCantidad", obtenerCantidadesServicios(cita.get()));
-			model.addAttribute("observaciones", obtenerObservaciones(cita.get()));
+			model.addAttribute("serviciosCantidad", citaService.obtenerCantidadesServicios(cita.get()));
+			model.addAttribute("observaciones", citaService.obtenerObservaciones(cita.get()));
 			return "citas/formularioCita";
 		}
+
 		return "redirect:/inicioAdmin/citas";
 	}
 
@@ -175,8 +155,7 @@ public class CitaControlador {
 			@RequestParam("observaciones") String obs, @RequestParam Map<String, String> params) {
 
 		try {
-			citaService.actualizarCita(cita.getCodigo(), clienteId, obtenerServiciosDesdeFormulario(params),
-					cita.getFecha(), obs);
+			citaService.editarCitaAdmin(cita.getCodigo(), clienteId, params, cita.getFecha(), obs);
 		} catch (ConflictoFechaException | IllegalArgumentException e) {
 			return "redirect:/inicioAdmin/citas/editar/" + cita.getCodigo() + "?error=" + codificar(e.getMessage());
 		}
@@ -186,67 +165,26 @@ public class CitaControlador {
 
 	// Borrar
 
+	@GetMapping("/inicioUsuario/citas/borrar/{id}")
+	public String borrarCitaCliente(@PathVariable Long id, Principal principal) {
+
+		Cliente cliente = clienteServicio.findByEmail(principal.getName())
+				.orElseThrow(() -> new NoSuchElementException("Cliente no encontrado"));
+
+		citaService.borrarCitaDeCliente(id, cliente.getId());
+
+		return "redirect:/inicioUsuario/citas";
+	}
+
 	@GetMapping("/inicioAdmin/citas/borrar/{id}")
 	public String borrar(@PathVariable("id") long id) {
-		citaService.findById(id)
-				.ifPresent(cita -> {
-					if (cita.getCliente() != null) {
-						cita.getCliente()
-								.getListaCitas()
-								.remove(cita);
-					}
-					citaService.delete(cita);
-				});
+
+		citaService.borrarCitaAdmin(id);
+
 		return "redirect:/inicioAdmin/citas";
 	}
 
-	private Map<Long, Integer> obtenerCantidadesServicios(Cita cita) {
-		if (cita.getCitaServicios() == null) {
-			return new HashMap<>();
-		}
-
-		return cita.getCitaServicios()
-				.stream()
-				.collect(Collectors.groupingBy(cs -> cs.getServicio()
-						.getId(), Collectors.summingInt(cs -> 1)));
-	}
-
-	private String obtenerObservaciones(Cita cita) {
-		if (cita.getCitaServicios() == null || cita.getCitaServicios()
-				.isEmpty()) {
-			return "";
-		}
-
-		return cita.getCitaServicios()
-				.get(0)
-				.getObservaciones();
-	}
-
-	private Map<Servicio, Integer> obtenerServiciosDesdeFormulario(Map<String, String> params) {
-		Map<Servicio, Integer> servicios = new LinkedHashMap<>();
-
-		params.forEach((clave, valor) -> {
-			if (clave.startsWith("cantidadServicio_")) {
-				int cantidad = parseCantidad(valor);
-				if (cantidad > 0) {
-					Long servicioId = Long.parseLong(clave.replace("cantidadServicio_", ""));
-					Servicio servicio = serviciosServicio.findById(servicioId)
-							.orElseThrow(() -> new NoSuchElementException("Servicio no encontrado"));
-					servicios.put(servicio, cantidad);
-				}
-			}
-		});
-
-		return servicios;
-	}
-
-	private int parseCantidad(String valor) {
-		try {
-			return Integer.parseInt(valor);
-		} catch (NumberFormatException e) {
-			return 0;
-		}
-	}
+	// Utilidades
 
 	private String codificar(String mensaje) {
 		return URLEncoder.encode(mensaje, StandardCharsets.UTF_8);
