@@ -46,6 +46,13 @@
 				</thead>
 
 				<tbody>
+
+					<tr th:if="${#lists.isEmpty(listaClientes)}">
+						<td colspan="8" class="text-center text-white-50 py-4">
+							No hay clientes registrados todavía.
+						</td>
+					</tr>
+
 					<tr th:each="c : ${listaClientes}">
 						<td th:text="${c.id}">-</td>
 						<td th:text="${c.numCortes}">-</td>
