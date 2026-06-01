@@ -43,6 +43,13 @@
 				</thead>
 
 				<tbody>
+
+					<tr th:if="${#lists.isEmpty(Servicios)}">
+						<td colspan="5" class="text-center text-white-50 py-4">
+							No hay servicios registrados todavía.
+						</td>
+					</tr>
+
 					<tr th:each="s : ${Servicios}">
 						<td th:text="${s.id}">-</td>
 						<td th:text="${s.nombre}">-</td>
@@ -73,7 +80,8 @@
 											<div th:if="${serviciosConCitas.get(s.id)}"
 												class="alert alert-warning border-warning bg-warning-subtle text-dark text-start">
 												<strong>Atención:</strong>
-												Este servicio tiene citas asociadas. Si lo borras, también se borrarán esas citas.
+												Este servicio tiene citas asociadas. Si lo borras, también se borrarán
+												esas citas.
 											</div>
 											<p class="text-danger small">Esta acción no se puede deshacer.</p>
 										</div>

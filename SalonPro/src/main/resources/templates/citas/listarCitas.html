@@ -45,6 +45,13 @@
 				</thead>
 
 				<tbody>
+
+					<tr th:if="${#lists.isEmpty(listaCitas)}">
+						<td colspan="7" class="text-center text-white-50 py-4">
+							No hay citas registradas todavía.
+						</td>
+					</tr>
+
 					<tr th:each="c : ${listaCitas}">
 						<td th:text="${c.codigo}">-</td>
 						<td th:text="${#temporals.format(c.fecha, 'dd/MM/yyyy HH:mm')}">-</td>
