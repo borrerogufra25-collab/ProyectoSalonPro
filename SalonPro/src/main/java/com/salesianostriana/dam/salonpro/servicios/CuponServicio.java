@@ -37,6 +37,14 @@ public class CuponServicio extends BaseServiciosImpl<Cupon, Long, CuponRepositor
 		return repository.findFirstByClienteIdAndUsadoFalseOrderByFechaCreacionAsc(cliente.getId());
 	}
 
+	public Optional<Cupon> buscarCuponUsadoEnCita(Cita cita) {
+		if (cita == null || cita.getCodigo() == null) {
+			return Optional.empty();
+		}
+
+		return repository.findFirstByCitaUsoCodigo(cita.getCodigo());
+	}
+
 	public List<Cupon> listarCuponesDisponibles(Cliente cliente) {
 		if (cliente == null || cliente.getId() == null) {
 			return List.of();
