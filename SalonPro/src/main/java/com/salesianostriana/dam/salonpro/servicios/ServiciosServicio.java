@@ -1,6 +1,8 @@
 package com.salesianostriana.dam.salonpro.servicios;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,15 @@ import lombok.RequiredArgsConstructor;
 public class ServiciosServicio extends BaseServiciosImpl<Servicio, Long, ServicioRepositorio> {
 
 	private final CitaRepositorio citaRepositorio;
+	private final CuponServicio cuponServicio;
 
 	public boolean tieneCitasAsociadas(Long servicioId) {
 		return repository.existsCitaByServicioId(servicioId);
+	}
+
+	public Map<Long, Boolean> obtenerMapaServiciosConCitas(List<Servicio> servicios) {
+		return servicios.stream()
+				.collect(Collectors.toMap(Servicio::getId, s -> tieneCitasAsociadas(s.getId())));
 	}
 
 	public void borrarServicioYCitasAsociadas(Servicio servicio) {
@@ -34,10 +42,15 @@ public class ServiciosServicio extends BaseServiciosImpl<Servicio, Long, Servici
 						.getListaCitas()
 						.remove(cita);
 			}
+			cuponServicio.liberarCuponDeCita(cita);
 		});
 
 		citaRepositorio.deleteAll(citasAsociadas);
 		repository.delete(servicio);
+	}
+
+	public void borrarServicioYCitasAsociadasSiExiste(Long id) {
+		findById(id).ifPresent(this::borrarServicioYCitasAsociadas);
 	}
 
 }

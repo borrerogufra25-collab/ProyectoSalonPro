@@ -2,7 +2,6 @@ package com.salesianostriana.dam.salonpro.controladores;
 
 import java.util.Optional;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.salesianostriana.dam.salonpro.modelo.Cliente;
-import com.salesianostriana.dam.salonpro.modelo.UserRole;
 import com.salesianostriana.dam.salonpro.servicios.ClienteServicio;
 
 import jakarta.validation.Valid;
@@ -23,14 +21,11 @@ import lombok.RequiredArgsConstructor;
 public class ClienteControlador {
 
 	private final ClienteServicio clienteServicio;
-	private final PasswordEncoder passwordEncoder;
 
 	// Listar
 	@GetMapping("/inicioAdmin/clientes")
 	public String listarClientes(Model model) {
-		model.addAttribute("listaClientes", clienteServicio.findAll().stream()
-				.filter(c -> c.getRole() != UserRole.ADMIN)
-				.toList());
+		model.addAttribute("listaClientes", clienteServicio.listarClientesUsuarios());
 		return "clientes/listarClientes";
 	}
 
@@ -47,9 +42,7 @@ public class ClienteControlador {
 			return "clientes/formularioCliente";
 		}
 
-		cliente.setRole(UserRole.USER);
-		cliente.setContrasenia(passwordEncoder.encode(cliente.getContrasenia()));
-		clienteServicio.save(cliente);
+		clienteServicio.registrarUsuario(cliente);
 		return "redirect:/inicioAdmin/clientes";
 	}
 
@@ -67,9 +60,7 @@ public class ClienteControlador {
 			return "formularioLogin";
 		}
 
-		cliente.setRole(UserRole.USER);
-		cliente.setContrasenia(passwordEncoder.encode(cliente.getContrasenia()));
-		clienteServicio.save(cliente);
+		clienteServicio.registrarUsuario(cliente);
 		return "redirect:/inicioSesion";
 	}
 
@@ -94,17 +85,14 @@ public class ClienteControlador {
 			return "clientes/formularioCliente";
 		}
 
-		clienteServicio.edit(c);
+		clienteServicio.editarCliente(c);
 		return "redirect:/inicioAdmin/clientes";
 	}
 
 	// Borrar
 	@GetMapping("/inicioAdmin/clientes/borrar/{id}")
 	public String borrar(@PathVariable("id") long id) {
-		Optional<Cliente> cBorrar = clienteServicio.findById(id);
-		if (cBorrar.isPresent()) {
-			clienteServicio.delete(cBorrar.get());
-		}
+		clienteServicio.borrarClienteSiExiste(id);
 		return "redirect:/inicioAdmin/clientes";
 	}
 }
