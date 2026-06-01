@@ -42,7 +42,7 @@ public class ServiciosServicio extends BaseServiciosImpl<Servicio, Long, Servici
 						.getListaCitas()
 						.remove(cita);
 			}
-			cuponServicio.liberarCuponesDeCita(cita);
+			cuponServicio.liberarCuponDeCita(cita);
 		});
 
 		citaRepositorio.deleteAll(citasAsociadas);
