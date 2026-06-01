@@ -359,7 +359,7 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 		cita.getCliente()
 				.getListaCitas()
 				.remove(cita);
-		cuponServicio.liberarCuponesDeCita(cita);
+		cuponServicio.liberarCuponDeCita(cita);
 		this.delete(cita);
 	}
 
@@ -375,7 +375,7 @@ public class CitaService extends BaseServiciosImpl<Cita, Long, CitaRepositorio> 
 					.remove(cita);
 		}
 
-		cuponServicio.liberarCuponesDeCita(cita);
+		cuponServicio.liberarCuponDeCita(cita);
 		this.delete(cita);
 	}
 }
