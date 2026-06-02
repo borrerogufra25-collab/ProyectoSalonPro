@@ -138,12 +138,12 @@ public class DataSeed {
 
 		usuarioPrueba.setPuntos(usuarioPrueba.getNumCortes() / dm.getCortesPorPunto());
 
-		// 5. GUARDAR CLIENTES
+		// Guardar Cliente
 		List<Cliente> clientesGuardados = clienteRepositorio.saveAll(clientesOriginales);
 		usuarioPrueba = clienteRepositorio.save(usuarioPrueba);
 		clienteRepositorio.save(adminPrueba);
 
-		// 6. GENERAR CUPONES INICIALES
+		// Generar cupones iniciales
 		if (usuarioPrueba.getPuntos() >= dm.getPuntosParaCupon()) {
 
 			Cupon cupon = Cupon.builder()
