@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.salonpro.controladores;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
@@ -45,7 +46,7 @@ public class PrincipalControlador {
 		Optional<Cliente> cliente = clienteServicio.findByEmail(principal.getName());
 		model.addAttribute("cliente", cliente.orElse(null));
 		model.addAttribute("cuponesDisponibles", cliente.map(cuponServicio::listarCuponesDisponibles)
-				.orElseGet(java.util.List::of));
+				.orElseGet(List::of));
 		return "inicioUsuario";
 	}
 
