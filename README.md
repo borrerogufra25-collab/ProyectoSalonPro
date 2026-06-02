@@ -6,7 +6,7 @@ El sistema permite, entre otras funcionalidades, la gestión de reservas, contro
 ## Datos para demo
 
 - **Rol Cliente**
-  - Email: `usuario@usuario.com`
+  - Email: `user@user.com`
   - Contraseña: `user`
 - **Rol Administrador**
   - Email: `admin@admin.com`
