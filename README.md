@@ -43,3 +43,15 @@ Esta aplicación web fue desarrollada para gestionar citas en una peluquería, c
   - Servicios más populares
   - Clientes con más visitas
   - Próximas citas ordenadas por fecha
+
+## Tecnologías utilizadas
+![Java](https://img.shields.io/badge/Java-21-007396?logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.6-6DB33F?logo=springboot&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring%20Security-Active-6DB33F?logo=springsecurity&logoColor=white)
+![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.x-005F0F?logo=thymeleaf&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap&logoColor=white)
+![H2 Database](https://img.shields.io/badge/H2-Database-004088?logo=h2&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-Build%20Tool-C71A36?logo=apachemaven&logoColor=white)
+![JPA](https://img.shields.io/badge/JPA-Hibernate-59666C?logo=hibernate&logoColor=white)
+![Validation](https://img.shields.io/badge/Bean%20Validation-Jakarta-007396)
+![Lombok](https://img.shields.io/badge/Lombok-Enabled-BC2C1A?logo=lombok&logoColor=white)
